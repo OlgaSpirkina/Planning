@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/app.js" type="text/javascript" defer></script>
+  <title>Home Page</title>
+</head>
+<body>
+  <form action="index" method="POST">
+   <fieldset>
+     <legend>{{title}}</legend>
+     <p>
+       <label for="date">Date:</label>
+       <input type="datetime-local" id="date" name="date">
+     </p>
+     <p>
+       <label for="veggy">Veggy:</label>
+       <input type="text" id="veggy" name="veggy">
+     </p>
+     <p>
+       <label for="fruits">Fruits:</label>
+       <input type="text" id="fruits" name="fruits">
+     </p>
+     <p>
+       <label for="bread_pasta">Bread & Pasta:</label>
+       <input type="text" id="bread_pasta" name="bread_pasta">
+     </p>
+     <p>
+       <label for="chocolate">Chocolate:</label>
+       <input type="text" id="chocolate" name="chocolate">
+     </p>
+     <p>
+       <label for="cereals">Cereals:</label>
+       <input type="text" id="cereals" name="cereals">
+     </p>
+     <input type="submit" value="Submit">
+   </fieldset>
+  </form>
+  <!--{{>header}}-->
+  <!--{{>footer}}-->
+</body>
+</html>
