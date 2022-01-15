@@ -9,7 +9,8 @@
   <title>Home Page</title>
 </head>
 <body>
-  <form action="/trainer" method="POST">
+  {{>header}}
+  <form method="POST">
    <fieldset>
      <legend>{{title}}</legend>
      <p>
@@ -31,6 +32,22 @@
      <input type="submit" value="Submit">
    </fieldset>
   </form>
-
+  <section>
+    <table>
+      <thead>
+        <th>Last Name</th>
+        <th>First Name</th>
+      </thead>
+      <tbody>
+        {{#each result}}
+        <tr>
+          <td><a href="/trainer/{{this.fname}}">{{this.fname}}</a></td>
+          <td><a href="/trainersplanning/{{this.fname}}">{{this.name}}</a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </section>
+  {{>footer}}
 </body>
 </html>

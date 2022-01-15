@@ -1,15 +1,6 @@
 import mysql from 'mysql'
 
 let conn = mysql.createConnection({
-  /*
-  connectionLimit : 100,
-  host     : 'localhost',
-  user     : 'root',
-  password : 'root',
-  database : 'Budget',
-  debug    : false,
-  timezone : 'cet'
-  */
   host: 'localhost',
   user: 'root',
   password: '24112411',

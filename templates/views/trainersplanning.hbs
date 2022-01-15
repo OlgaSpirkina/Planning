@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/app.js" type="text/javascript" defer></script>
+  <title>Trainers Page</title>
+</head>
+<body>
+  <button><a href="/">Home Page</a></button>
+  <section>
+    <form action="http://localhost:3000/hello" method="POST">
+     <fieldset>
+       <legend>Planning of {{result.[0].name}} {{result.[0].fname}}</legend>
+       <p>
+         <label for="trainer_id">Id:</label>
+         <input type="text" value="{{result.[0].id}}" id="trainer_id" name="trainer_id">
+       </p>
+       <p>
+         <label for="company">Entreprise:</label>
+         <input type="text" id="company" name="company">
+       </p>
+       <p>
+         <label for="date">Date:</label>
+         <input type="date" id="date" name="date">
+       </p>
+       <p>
+         <label for="theClass">Cours:</label>
+         <input type="text" id="theClass" name="theClass">
+       </p>
+       <p>
+         <label for="time">Heures d'intervention:</label>
+         <input type="datetime" id="time" name="time">
+       </p>
+       <p>
+         <label for="hours">Nombre d'heurs par intervention:</label>
+         <input type="number" id="hours" name="hours">
+       </p>
+       <input type="submit" value="Submit">
+     </fieldset>
+    </form>
+  </section>
+</body>
+</html>

@@ -9,6 +9,19 @@
   <title>Trainers Page</title>
 </head>
 <body>
-  <h1>{{title}}</h1>
+  <button><a href="/">Home Page</a></button>
+  <section>
+    <h1>{{title}}</h1>
+      <p>prénom: {{result.[0].name}}</p>
+      <p>address mail: {{result.[0].email}}</p>
+      <p>numéro de téléphone: {{result.[0].mobile}}</p>
+  </section>
+  <section>
+    <div>
+      {{#each result}}
+        <p>{{this.company}}</p>
+      {{/each}}  
+    </div>
+  </section>
 </body>
 </html>
