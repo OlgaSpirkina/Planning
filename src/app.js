@@ -51,7 +51,7 @@ app.get('/', (req,res,next) => {
 })
 app.get('/trainer/:id', (req,res,next) => {
   let trainerId = req.params.id
-  let sql = 'SELECT * FROM trainers t JOIN classes c ON t.id = c.trainer_id AND t.fname = ?'
+  let sql = 'SELECT * FROM trainers t JOIN schedule s ON t.id = s.trainer_id AND t.fname = ?'
   conn.query(sql, [trainerId], function (err, result) {
     if (err) throw err;
     else{
@@ -64,10 +64,12 @@ app.get('/trainer/:id', (req,res,next) => {
 })
 app.get('/trainersplanning/:id', (req,res,next) => {
   let trainerId = req.params.id
-  let sql = 'SELECT * FROM trainers t WHERE t.fname = ?'
+  //console.log(chalk.cyan.bold(util.inspect(trainerId)))
+  let sql = 'SELECT * FROM trainers t WHERE t.username = ?'
   conn.query(sql, [trainerId], function (err, result) {
     if (err) throw err;
     else{
+      console.log(chalk.blue.bold(util.inspect(result)))
       res.render('trainersplanning', {
         title: trainerId,
         result: result
@@ -76,35 +78,46 @@ app.get('/trainersplanning/:id', (req,res,next) => {
   })
 })
 app.get('/hello', (req,res,next) => {
-  res.render('hello', {
-    title: 'Hello !',
-    message: 'Les données ont été rajoutée. Merci et à la prochaine!'
+  let sql = 'SELECT * FROM schedule'
+  conn.query(sql, function (err, result) {
+    if (err) throw err;
+    else{
+      res.render('hello', {
+        result: result,
+        title: 'Hello !',
+        message: 'Les données ont été rajoutée. Merci et à la prochaine!'
+      })
+    }
   })
 })
 app.post('/hello', (req,res,next) => {
-  console.log(chalk.blue.bold(res.location))
-  let trainer_id, company, date, theClass, time, hours, sqlClass;
+  let name, fname, trainer_id, company, date, time, yoga, pilates, other_classes, total_classes, sqlClass;
+  name = req.body.name;
+  fname = req.body.fname;
   trainer_id = req.body.trainer_id;
   company = req.body.company;
   date = req.body.date;
-  theClass = req.body.theClass;
-  time = req.body.time;
-  hours = req.body.hours;
-  sqlClass = `INSERT INTO classes (trainer_id, company, date, theClass, time, hours) VALUES ("${trainer_id}", "${company}", "${date}", "${theClass}","${time}", "${hours}")`;
+  time = req.body.time,
+  yoga = req.body.yoga;
+  pilates = req.body.pilates;
+  other_classes = req.body.other_classes;
+  total_classes = req.body.total_classes;
+  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, company, date, time, yoga, pilates, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${company}", "${date}", "${time}", "${yoga}","${pilates}", "${other_classes}", "${total_classes}")`;
   conn.query(sqlClass, function(err, result){
     if(err) throw err;
-    console.log(chalk.cyan.bold('record inserted'))
-    req.flash('success', 'Data added successfully!')
-    //res.redirect('/')
+    console.log(chalk.cyan.bold('Data added successfully into schedule!'))
+    req.flash('success', 'Data added successfully into schedule!')
+    res.redirect('/hello')
   })
 })
 app.post('/', (req,res,next) => {
-  let name, fname, email, mobile, sql;
+  let name, fname, username, email, mobile, sql;
   name = req.body.name;
   fname = req.body.fname;
+  username = req.body.username;
   email = req.body.email;
   mobile = req.body.mobile;
-  sql = `INSERT INTO trainers (name, fname, email, mobile) VALUES ("${name}", "${fname}", "${email}", "${mobile}")`;
+  sql = `INSERT INTO trainers (name, fname, username, email, mobile) VALUES ("${name}", "${fname}", "${username}", "${email}", "${mobile}")`;
   conn.query(sql, function(err, result){
     if(err) throw err;
     console.log(chalk.cyan.bold('record inserted'))

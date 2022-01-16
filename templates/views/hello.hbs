@@ -13,6 +13,11 @@
   <section>
     <h1>{{title}}</h1>
     <p>{{message}}</p>
+    {{#each result}}
+      <p>{{this.name}} {{this.fname}}</p>
+      <p>{{this.company}}</p>
+      <p>{{this.total_classes}}</p>
+    {{/each}}
   </section>
 </body>
 </html>

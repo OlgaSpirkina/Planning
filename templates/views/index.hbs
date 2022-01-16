@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="/css/styles.css">
-  <script src="/js/app.js" type="text/javascript" defer></script>
+  <script src="/js/main.js" type="text/javascript" defer></script>
   <title>Home Page</title>
 </head>
 <body>
@@ -15,11 +15,15 @@
      <legend>{{title}}</legend>
      <p>
        <label for="name">First Name:</label>
-       <input type="text" id="name" name="name">
+       <input class="create-username" type="text" id="name" name="name">
      </p>
      <p>
        <label for="fname">Last Name:</label>
-       <input type="text" id="fname" name="fname">
+       <input class="create-username" type="text" id="fname" name="fname">
+     </p>
+     <p>
+       <label for="username">UserName:</label>
+       <input type="text" id="username" name="username">
      </p>
      <p>
        <label for="email">Email:</label>
@@ -29,7 +33,7 @@
        <label for="mobile">Mobile phone number:</label>
        <input type="text" id="mobile" name="mobile">
      </p>
-     <input type="submit" value="Submit">
+     <input class="clear-form" type="submit" value="Submit">
    </fieldset>
   </form>
   <section>
@@ -41,12 +45,23 @@
       <tbody>
         {{#each result}}
         <tr>
-          <td><a href="/trainer/{{this.fname}}">{{this.fname}}</a></td>
-          <td><a href="/trainersplanning/{{this.fname}}">{{this.name}}</a></td>
+          <td><a href="/trainer/{{this.fname}}{{this.name}}">{{this.fname}}</a></td>
+          <td><a href="/trainer/{{this.fname}}{{this.name}}">{{this.name}}</a></td>
         </tr>
         {{/each}}
       </tbody>
     </table>
+  </section>
+  <section>
+    <h3>Ajouter le planning des professeurs:</h3>
+    <label for="choose_trainer">Choisir un professeur</label>
+    <select name="choose_trainer" id="choose-trainer">
+      <option selected>Nom de professeur</option>
+      {{#each result}}
+      <option value="{{this.name}} {{this.fname}}">{{this.name}} {{this.fname}}</option>
+      {{/each}}
+    </select>
+    <button type="button"><a id="anchor-in-createplanning">Créer le planning</a></button>
   </section>
   {{>footer}}
 </body>
