@@ -11,6 +11,8 @@ import flash from 'express-flash'
 import session from 'express-session'
 import conn from './database.js'
 import util from 'util'
+import moment from 'moment'
+import 'moment/locale/fr.js'
 
 const moduleURL = new URL(import.meta.url)
 const __filename = fileURLToPath(import.meta.url)
@@ -82,10 +84,63 @@ app.get('/hello', (req,res,next) => {
   conn.query(sql, function (err, result) {
     if (err) throw err;
     else{
+      let startOfClasses = [];
+      let daysOfWeek = [];
+      (()=>{
+        for(let i=0; i<result.length; i++){
+          startOfClasses.push(moment(result[i].time).local('fr').format('LT'));
+          daysOfWeek.push(moment(result[i].date).local('fr').format('L'))
+        }
+        return startOfClasses
+      })()
+      for(let i=0; i<startOfClasses.length; i++){
+        for(let j=0; j<result.length; j++){
+          if(i === j){
+            result[j].time = startOfClasses[i]
+          }
+        }
+      }
+/* Calendar */
+      const days = [
+        'Dimanche',
+        'Lundi',
+        'Mardi',
+        'Mercredi',
+        'Jeudi',
+        'Vendredi',
+        'Samedi',
+      ]
+      const months = [
+        'Janvier',
+        'Février',
+        'Mars',
+        'Avril',
+        'Mai',
+        'Juin',
+        'Juillet',
+        'Août',
+        'Septembre',
+        'Octobre',
+        'Novembre',
+        'Décembre'
+      ]
+      const years = [
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+
+      console.log(chalk.yellow.bold(daysOfWeek.sort()))
+      console.log(chalk.yellow.bold())
       res.render('hello', {
         result: result,
         title: 'Hello !',
-        message: 'Les données ont été rajoutée. Merci et à la prochaine!'
+        message: 'Les données ont été rajoutée. Merci et à la prochaine!',
+        timeOfClass: startOfClasses,
+        days: days,
+        months: months,
+        years: years
       })
     }
   })

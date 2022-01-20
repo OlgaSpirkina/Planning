@@ -1,0 +1,28 @@
+:root{
+  --brownBackground: #291d1f;
+  --navbarGrey: #1d2529;
+  --mainReddish: #CF0034;
+  --lightGrey: #A79B8D;
+  --theYellow: #ffba00;
+  //--mainfont: 'Chivo', sans-serif;
+}
+*{
+  box-sizing: border-box;
+}
+body{
+  margin: 0;
+  padding: 0;
+}
+.parent-calendar-event{
+  width: 20rem;
+  border: 1px solid red;
+  margin: .5rem;
+}
+table{
+  border: 1px solid var(--navbarGrey);
+  margin: 0;
+  padding: 0;
+}
+button{
+  border: none;
+}
