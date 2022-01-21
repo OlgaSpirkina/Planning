@@ -21,7 +21,14 @@ const app = express()
 const publicDirPath = path.join(__dirname, '../public')
 const viewsPath = path.join(__dirname, '../templates/views')
 const partialsPath = path.join(__dirname, '../templates/partials')
-
+// Transform an array into object grouped by some data
+var groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+//
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
@@ -130,11 +137,49 @@ app.get('/hello', (req,res,next) => {
         2024,
         2025
       ]
+      let today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
+      let firstDay = (new Date(currentYear, currentMonth)).getDay();
+      let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
+      let options = { month: 'long'};
+      let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
+      let objMonth = {};
+      for(let i=1; i<=daysInMonth; i++){
+        let theDate = new Date(currentYear, currentMonth, i);
+        objMonth[theDate] = []
+      }
+      const byDate = groupBy(result, 'date')
+      for(let i=0; i<Object.keys(objMonth).length; i++){
+        for(let j=0; j<Object.keys(byDate).length; j++){
+          for(let x=0; x<Object.values(byDate).length; x++){
+            if(Object.keys(objMonth)[i] === Object.keys(byDate)[j]){
+              if(x === j){
+                objMonth[Object.keys(objMonth)[i]] = Object.values(byDate)[x]
+              }
+            }
+          }
+        }
+      }
+      let formattedKeys = {};
+      Object.keys(objMonth).map(function(item, index){
+        item = moment(item).format("llll")
+        formattedKeys[item] = item
+      })
+      function renameKeys(objMonth, formattedKeys){
+        const keyValues = Object.keys(objMonth).map(key => {
+          const newKey = formattedKeys[key] || key;
+          console.log(chalk.cyan.bold(util.inspect(newKey)));
+          return { [newKey]: objMonth[key] };
+        });
 
-      console.log(chalk.yellow.bold(daysOfWeek.sort()))
-      console.log(chalk.yellow.bold())
+        return Object.assign({}, ...keyValues);
+      }
+      renameKeys(objMonth, formattedKeys);
+
       res.render('hello', {
         result: result,
+        calendar: objMonth,
         title: 'Hello !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,

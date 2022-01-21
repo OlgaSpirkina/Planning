@@ -23,13 +23,15 @@
   <section class="container-fluid">
     <div class="row">
       <div class="col-12 d-flex flex-wrap">
-        {{#each result}}
+        {{#each calendar}}
         <div class="parent-calendar-event">
-          <p>{{this.name}} {{this.fname}}</p>
-          <p>{{this.company}}</p>
-          <p></p>
-          <p>début des cours: {{this.time}}</p>
-          <p>fin des cours: {{this.total_classes}}</p>
+          <p>{{@key}}</p>
+          {{#each this}}
+            <div style="border: 1px solid yellow; margin: .5rem">
+              <p>{{this.name}} {{this.fname}}</p>
+              <p>début des cours: {{this.time}} chez {{this.company}} de {{this.total_classes}} heurs</p>
+            </div>
+          {{/each}}
         </div>
         {{/each}}
       </div>
