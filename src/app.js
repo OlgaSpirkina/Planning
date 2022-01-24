@@ -154,36 +154,14 @@ app.get('/hello', (req,res,next) => {
         let theDate = new Date(currentYear, currentMonth, i);
         objMonth[theDate] = []
       }
-      const byDate = groupBy(result, 'date')
-
-      let formattedKeys = {};
-      Object.keys(objMonth).map(function(item, index){
-        item = moment(item).format("llll")
-        formattedKeys[item] = item
-      })
-      function renameKeys(objMonth, formattedKeys){
-        const keyValues = Object.keys(objMonth).map(key => {
-          const newKey = formattedKeys[key] || key;
-          //console.log(chalk.cyan.bold(util.inspect(newKey)));
-          return { [newKey]: objMonth[key] };
-        });
-
-        return Object.assign({}, ...keyValues);
-      }
-      renameKeys(objMonth, formattedKeys);
       let groupedByMonth = groupBy(result, 'choose_months')
       groupedByMonth[Object.keys(groupedByMonth)] = groupBy(Object.values(groupedByMonth)[0], 'date')
-
-      console.log(chalk.blue.bold(util.inspect(Object.keys(Object.values(groupedByMonth)[0]).length)))
-      console.log(chalk.yellow.bold(util.inspect(Object.keys(objMonth).length)))
       for(let i=0; i<Object.keys(objMonth).length; i++){
         for(let j=0; j<Object.keys(Object.values(groupedByMonth)[0]).length; j++){
-            if(Object.keys(objMonth)[i] === Object.keys(Object.values(groupedByMonth)[0])[j]){
-                console.log(chalk.red.bold(util.inspect(Object.keys(objMonth)[i])))
-                objMonth[Object.keys(objMonth)[i]] = Object.values(Object.values(groupedByMonth)[0])[j]
-
-            }
-
+          if(Object.keys(objMonth)[i] === Object.keys(Object.values(groupedByMonth)[0])[j]){
+              console.log(chalk.red.bold(util.inspect(Object.keys(objMonth)[i])))
+              objMonth[Object.keys(objMonth)[i]] = Object.values(Object.values(groupedByMonth)[0])[j]
+          }
         }
       }
       groupedByMonth[Object.keys(groupedByMonth)] = objMonth
@@ -198,17 +176,13 @@ app.get('/hello', (req,res,next) => {
           return a.timeNumInSeconds - b.timeNumInSeconds
         })
       })
-      console.log(chalk.cyan.bold(util.inspect(Object.keys(Object.values(Object.values(groupedByMonth))[0]))))
+      //console.log(chalk.cyan.bold(util.inspect(Object.keys(Object.values(Object.values(groupedByMonth))[0]))))
       res.render('hello', {
         result: result,
-        calendar: objMonth,
         cal: groupedByMonth,
         title: 'Hello !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,
-        days: days,
-        months: months,
-        years: years,
         currentYear: currentYear
       })
     }
