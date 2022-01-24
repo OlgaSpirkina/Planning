@@ -26,6 +26,24 @@
          <label for="fname">Nom de famille:</label>
          <input type="text" value="{{result.[0].fname}}" id="fname" name="fname">
        </p>
+       <p class="d-flex">
+         <label for="choose_months">Mois: </laber>
+         <select name="choose_months" id="choose-months">
+           <option selected="selected">{{currentMonth}}</option>
+           {{#each months}}
+           <option value="{{this}}">{{this}}</option>
+           {{/each}}
+         </select>
+       </p>
+       <p class="d-flex">
+         <label for="choose_years">Année: </label>
+         <select name="choose_years" id="choose-years">
+           <option selected="selected">{{currentYear}}</option>
+           {{#each years}}
+           <option value="{{this}}">{{this}}</option>
+           {{/each}}
+         </select>
+       </p>
        <p>
          <label for="company">Entreprise:</label>
          <input type="text" id="company" name="company">

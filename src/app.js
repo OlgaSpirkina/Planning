@@ -46,6 +46,45 @@ app.use(session({
   cookie: { maxAge: 60000 }
 }))
 app.use(flash())
+// Variables
+/* Calendar */
+const days = [
+  'Dimanche',
+  'Lundi',
+  'Mardi',
+  'Mercredi',
+  'Jeudi',
+  'Vendredi',
+  'Samedi',
+]
+const months = [
+  'Janvier',
+  'Février',
+  'Mars',
+  'Avril',
+  'Mai',
+  'Juin',
+  'Juillet',
+  'Août',
+  'Septembre',
+  'Octobre',
+  'Novembre',
+  'Décembre'
+]
+const years = [
+  2022,
+  2023,
+  2024,
+  2025
+]
+let today = new Date();
+let currentMonth = today.getMonth();
+let currentYear = today.getFullYear();
+let firstDay = (new Date(currentYear, currentMonth)).getDay();
+let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
+let options = { month: 'long'};
+let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
+formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
 app.get('/', (req,res,next) => {
   let sql = 'SELECT name, fname FROM trainers ORDER BY fname'
   conn.query(sql, function(err, result){
@@ -78,10 +117,13 @@ app.get('/trainersplanning/:id', (req,res,next) => {
   conn.query(sql, [trainerId], function (err, result) {
     if (err) throw err;
     else{
-      console.log(chalk.blue.bold(util.inspect(result)))
       res.render('trainersplanning', {
         title: trainerId,
-        result: result
+        result: result,
+        months: months,
+        years: years,
+        currentMonth: formatedMonth,
+        currentYear: currentYear
       })
     }
   })
@@ -107,60 +149,13 @@ app.get('/hello', (req,res,next) => {
           }
         }
       }
-/* Calendar */
-      const days = [
-        'Dimanche',
-        'Lundi',
-        'Mardi',
-        'Mercredi',
-        'Jeudi',
-        'Vendredi',
-        'Samedi',
-      ]
-      const months = [
-        'Janvier',
-        'Février',
-        'Mars',
-        'Avril',
-        'Mai',
-        'Juin',
-        'Juillet',
-        'Août',
-        'Septembre',
-        'Octobre',
-        'Novembre',
-        'Décembre'
-      ]
-      const years = [
-        2022,
-        2023,
-        2024,
-        2025
-      ]
-      let today = new Date();
-      let currentMonth = today.getMonth();
-      let currentYear = today.getFullYear();
-      let firstDay = (new Date(currentYear, currentMonth)).getDay();
-      let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
-      let options = { month: 'long'};
-      let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
       let objMonth = {};
       for(let i=1; i<=daysInMonth; i++){
         let theDate = new Date(currentYear, currentMonth, i);
         objMonth[theDate] = []
       }
       const byDate = groupBy(result, 'date')
-      for(let i=0; i<Object.keys(objMonth).length; i++){
-        for(let j=0; j<Object.keys(byDate).length; j++){
-          for(let x=0; x<Object.values(byDate).length; x++){
-            if(Object.keys(objMonth)[i] === Object.keys(byDate)[j]){
-              if(x === j){
-                objMonth[Object.keys(objMonth)[i]] = Object.values(byDate)[x]
-              }
-            }
-          }
-        }
-      }
+
       let formattedKeys = {};
       Object.keys(objMonth).map(function(item, index){
         item = moment(item).format("llll")
@@ -169,32 +164,63 @@ app.get('/hello', (req,res,next) => {
       function renameKeys(objMonth, formattedKeys){
         const keyValues = Object.keys(objMonth).map(key => {
           const newKey = formattedKeys[key] || key;
-          console.log(chalk.cyan.bold(util.inspect(newKey)));
+          //console.log(chalk.cyan.bold(util.inspect(newKey)));
           return { [newKey]: objMonth[key] };
         });
 
         return Object.assign({}, ...keyValues);
       }
       renameKeys(objMonth, formattedKeys);
+      let groupedByMonth = groupBy(result, 'choose_months')
+      groupedByMonth[Object.keys(groupedByMonth)] = groupBy(Object.values(groupedByMonth)[0], 'date')
 
+      console.log(chalk.blue.bold(util.inspect(Object.keys(Object.values(groupedByMonth)[0]).length)))
+      console.log(chalk.yellow.bold(util.inspect(Object.keys(objMonth).length)))
+      for(let i=0; i<Object.keys(objMonth).length; i++){
+        for(let j=0; j<Object.keys(Object.values(groupedByMonth)[0]).length; j++){
+            if(Object.keys(objMonth)[i] === Object.keys(Object.values(groupedByMonth)[0])[j]){
+                console.log(chalk.red.bold(util.inspect(Object.keys(objMonth)[i])))
+                objMonth[Object.keys(objMonth)[i]] = Object.values(Object.values(groupedByMonth)[0])[j]
+
+            }
+
+        }
+      }
+      groupedByMonth[Object.keys(groupedByMonth)] = objMonth
+      console.log(chalk.green.bold(util.inspect()))
+      Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
+        item.forEach((elem)=>{
+          let timeNum = elem.time.split(":");
+          let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
+          elem['timeNumInSeconds'] = timeNumInSeconds
+        })
+        item.sort(function(a, b){
+          return a.timeNumInSeconds - b.timeNumInSeconds
+        })
+      })
+      console.log(chalk.cyan.bold(util.inspect(Object.keys(Object.values(Object.values(groupedByMonth))[0]))))
       res.render('hello', {
         result: result,
         calendar: objMonth,
+        cal: groupedByMonth,
         title: 'Hello !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,
         days: days,
         months: months,
-        years: years
+        years: years,
+        currentYear: currentYear
       })
     }
   })
 })
 app.post('/hello', (req,res,next) => {
-  let name, fname, trainer_id, company, date, time, yoga, pilates, other_classes, total_classes, sqlClass;
+  let name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, other_classes, total_classes, sqlClass;
   name = req.body.name;
   fname = req.body.fname;
   trainer_id = req.body.trainer_id;
+  choose_months = req.body.choose_months;
+  choose_years = req.body.choose_years;
   company = req.body.company;
   date = req.body.date;
   time = req.body.time,
@@ -202,7 +228,7 @@ app.post('/hello', (req,res,next) => {
   pilates = req.body.pilates;
   other_classes = req.body.other_classes;
   total_classes = req.body.total_classes;
-  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, company, date, time, yoga, pilates, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${company}", "${date}", "${time}", "${yoga}","${pilates}", "${other_classes}", "${total_classes}")`;
+  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${choose_months}", "${choose_years}", "${company}", "${date}", "${time}", "${yoga}","${pilates}", "${other_classes}", "${total_classes}")`;
   conn.query(sqlClass, function(err, result){
     if(err) throw err;
     console.log(chalk.cyan.bold('Data added successfully into schedule!'))
