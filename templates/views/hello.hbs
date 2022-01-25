@@ -24,11 +24,22 @@
     <div class="row">
       <div class="col-12 d-flex flex-column">
         <h3 class="text-center">{{#each cal}}{{@key}}{{/each}} {{currentYear}}</h3>
+        <table>
+          <thead>
+            {{#each days}}
+            <th class="table-daysofweek-heading {{this}}">{{this}}</th>
+            {{/each}}
+          </thead>
+          <tbody>
+            <tr>
+            </tr>
+          </tbody>
+        </table>
         {{#each cal}}
         <div class="d-flex flex-wrap">
           {{#each this}}
           <div class="parent-calendar-event">
-            <h4 class="formated-day">{{@key}}</h4>
+            <h5 class="formated-day">{{@key}}</h5>
             {{#each this}}
             <div style="border: 1px solid yellow; margin: .5rem">
               <p>{{this.name}} {{this.fname}}</p>

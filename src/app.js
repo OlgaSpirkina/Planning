@@ -49,13 +49,13 @@ app.use(flash())
 // Variables
 /* Calendar */
 const days = [
-  'Dimanche',
   'Lundi',
   'Mardi',
   'Mercredi',
   'Jeudi',
   'Vendredi',
   'Samedi',
+  'Dimanche'
 ]
 const months = [
   'Janvier',
@@ -85,6 +85,53 @@ let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
 let options = { month: 'long'};
 let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
 formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
+//
+/*** Function to create an object grouped by Month for Calendar ***/
+let startOfClasses = [];
+const createCalendarGroupedByMonths = (result) => {
+  let daysOfWeek = [];
+  (()=>{
+    for(let i=0; i<result.length; i++){
+      startOfClasses.push(moment(result[i].time).local('fr').format('LT'));
+      daysOfWeek.push(moment(result[i].date).local('fr').format('L'))
+    }
+    return startOfClasses
+  })()
+  for(let i=0; i<startOfClasses.length; i++){
+    for(let j=0; j<result.length; j++){
+      if(i === j){
+        result[j].time = startOfClasses[i]
+      }
+    }
+  }
+  let objMonth = {};
+  for(let i=1; i<=daysInMonth; i++){
+    let theDate = new Date(currentYear, currentMonth, i);
+    objMonth[theDate] = []
+  }
+  let groupedByMonth = groupBy(result, 'choose_months')
+  groupedByMonth[Object.keys(groupedByMonth)] = groupBy(Object.values(groupedByMonth)[0], 'date')
+  for(let i=0; i<Object.keys(objMonth).length; i++){
+    for(let j=0; j<Object.keys(Object.values(groupedByMonth)[0]).length; j++){
+      if(Object.keys(objMonth)[i] === Object.keys(Object.values(groupedByMonth)[0])[j]){
+          objMonth[Object.keys(objMonth)[i]] = Object.values(Object.values(groupedByMonth)[0])[j]
+      }
+    }
+  }
+  groupedByMonth[Object.keys(groupedByMonth)] = objMonth
+  Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
+    item.forEach((elem)=>{
+      let timeNum = elem.time.split(":");
+      let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
+      elem['timeNumInSeconds'] = timeNumInSeconds
+    })
+    item.sort(function(a, b){
+      return a.timeNumInSeconds - b.timeNumInSeconds
+    })
+  })
+  return groupedByMonth;
+}
+//
 app.get('/', (req,res,next) => {
   let sql = 'SELECT name, fname FROM trainers ORDER BY fname'
   conn.query(sql, function(err, result){
@@ -99,13 +146,31 @@ app.get('/', (req,res,next) => {
 })
 app.get('/trainer/:id', (req,res,next) => {
   let trainerId = req.params.id
-  let sql = 'SELECT * FROM trainers t JOIN schedule s ON t.id = s.trainer_id AND t.fname = ?'
+  let sql = 'SELECT * FROM trainers t JOIN schedule s ON t.id = s.trainer_id AND t.username = ?'
   conn.query(sql, [trainerId], function (err, result) {
     if (err) throw err;
     else{
+      let trainersPersonalPlanning = createCalendarGroupedByMonths(result)
+      let email, mobile;
+      let countClasses = []
+      let objForAllClasses = {}
+      for(let i=0; i<Object.values(Object.values(trainersPersonalPlanning)[0]).length; i++){
+        if(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0] !== undefined){
+          email = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].email
+          mobile = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].mobile
+          if(objForAllClasses['yoga'] === undefined){
+            objForAllClasses['yoga'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10);
+          }else{
+            objForAllClasses['yoga'] = parseInt(Object.values(objForAllClasses), 10) + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
+          }
+        }
+      }
+      console.log(chalk.cyan.bold(util.inspect(objForAllClasses)))
       res.render('trainer', {
         title: trainerId,
-        result: result
+        result: trainersPersonalPlanning,
+        email: email,
+        mobile: mobile
       })
     }
   })
@@ -133,57 +198,16 @@ app.get('/hello', (req,res,next) => {
   conn.query(sql, function (err, result) {
     if (err) throw err;
     else{
-      let startOfClasses = [];
-      let daysOfWeek = [];
-      (()=>{
-        for(let i=0; i<result.length; i++){
-          startOfClasses.push(moment(result[i].time).local('fr').format('LT'));
-          daysOfWeek.push(moment(result[i].date).local('fr').format('L'))
-        }
-        return startOfClasses
-      })()
-      for(let i=0; i<startOfClasses.length; i++){
-        for(let j=0; j<result.length; j++){
-          if(i === j){
-            result[j].time = startOfClasses[i]
-          }
-        }
-      }
-      let objMonth = {};
-      for(let i=1; i<=daysInMonth; i++){
-        let theDate = new Date(currentYear, currentMonth, i);
-        objMonth[theDate] = []
-      }
-      let groupedByMonth = groupBy(result, 'choose_months')
-      groupedByMonth[Object.keys(groupedByMonth)] = groupBy(Object.values(groupedByMonth)[0], 'date')
-      for(let i=0; i<Object.keys(objMonth).length; i++){
-        for(let j=0; j<Object.keys(Object.values(groupedByMonth)[0]).length; j++){
-          if(Object.keys(objMonth)[i] === Object.keys(Object.values(groupedByMonth)[0])[j]){
-              console.log(chalk.red.bold(util.inspect(Object.keys(objMonth)[i])))
-              objMonth[Object.keys(objMonth)[i]] = Object.values(Object.values(groupedByMonth)[0])[j]
-          }
-        }
-      }
-      groupedByMonth[Object.keys(groupedByMonth)] = objMonth
-      console.log(chalk.green.bold(util.inspect()))
-      Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
-        item.forEach((elem)=>{
-          let timeNum = elem.time.split(":");
-          let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
-          elem['timeNumInSeconds'] = timeNumInSeconds
-        })
-        item.sort(function(a, b){
-          return a.timeNumInSeconds - b.timeNumInSeconds
-        })
-      })
+      let allTrainersPlanning = createCalendarGroupedByMonths(result)
       //console.log(chalk.cyan.bold(util.inspect(Object.keys(Object.values(Object.values(groupedByMonth))[0]))))
       res.render('hello', {
         result: result,
-        cal: groupedByMonth,
+        cal: allTrainersPlanning,
         title: 'Hello !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,
-        currentYear: currentYear
+        currentYear: currentYear,
+        days: days
       })
     }
   })
