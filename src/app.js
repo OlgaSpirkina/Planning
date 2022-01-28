@@ -154,23 +154,57 @@ app.get('/trainer/:id', (req,res,next) => {
       let email, mobile;
       let countClasses = []
       let objForAllClasses = {}
+      let objForSalary = {}
       for(let i=0; i<Object.values(Object.values(trainersPersonalPlanning)[0]).length; i++){
         if(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0] !== undefined){
           email = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].email
           mobile = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].mobile
-          if(objForAllClasses['yoga'] === undefined){
+        // Calculating total and individual classes
+          if((objForAllClasses['yoga'] === undefined) || (objForAllClasses['pilates'] === undefined) || (objForAllClasses['other_classes'] === undefined)){
             objForAllClasses['yoga'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10);
+            objForAllClasses['pilates'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10);
+            objForAllClasses['other_classes'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10);
+            objForAllClasses['total'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
           }else{
-            objForAllClasses['yoga'] = parseInt(Object.values(objForAllClasses), 10) + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
+            objForAllClasses['yoga'] = objForAllClasses.yoga + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
+            objForAllClasses['pilates'] = objForAllClasses.pilates + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10)
+            objForAllClasses['other_classes'] = objForAllClasses.other_classes + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10)
+            objForAllClasses['total'] = objForAllClasses.total + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
+          }
+        // Second object with salary for each class
+          if((objForSalary['yoga'] === undefined) || (objForSalary['pilates'] === undefined) || (objForSalary['other_classes'] === undefined)){
+            objForSalary['yoga'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10);
+            objForSalary['pilates'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10);
+            objForSalary['other_classes'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10);
+            objForSalary['total'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
+          }else{
+            objForSalary['yoga'] = objForSalary.yoga + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
+            objForSalary['pilates'] = objForSalary.pilates + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10)
+            objForSalary['other_classes'] = objForSalary.other_classes + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10)
+            objForSalary['total'] = objForSalary.total + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
           }
         }
       }
-      console.log(chalk.cyan.bold(util.inspect(objForAllClasses)))
+      for(let i=0; i<Object.keys(objForSalary).length; i++){
+        if(Object.keys(objForSalary)[i] === 'yoga'){
+          objForSalary['yoga'] = objForSalary.yoga * 50;
+        }
+        if(Object.keys(objForSalary)[i] === 'pilates'){
+          objForSalary['pilates'] = objForSalary.pilates * 40;
+        }
+        if(Object.keys(objForSalary)[i] === 'other_classes'){
+          objForSalary['other_classes'] = objForSalary.other_classes * 30;
+        }
+      }
+console.log(chalk.yellow.bold(util.inspect(objForAllClasses)))
+
       res.render('trainer', {
         title: trainerId,
         result: trainersPersonalPlanning,
         email: email,
-        mobile: mobile
+        mobile: mobile,
+        allClasses: objForAllClasses,
+        allSalaries: objForSalary
       })
     }
   })
