@@ -9,8 +9,9 @@
   <title>Trainers Page</title>
 </head>
 <body>
-  <button><a href="/">Home Page</a></button>
+  {{>header}}
   <section>
+    <p>Créez des nouveaux horaires</p>
     <form action="/hello" method="POST">
      <fieldset>
        <legend>Planning of {{result.[0].name}} {{result.[0].fname}}</legend>

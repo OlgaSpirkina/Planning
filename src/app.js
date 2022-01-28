@@ -138,7 +138,7 @@ app.get('/', (req,res,next) => {
     if(err) throw err;
     req.flash('success', 'Data added successfully!')
     res.render('index', {
-      title: 'Trainers information',
+      title: 'Ajouter un nouveau professeur',
       result: result
     })
   })

@@ -13,12 +13,14 @@ body{
   margin: 0;
   padding: 0;
 }
+// Styling home page
 .parent-calendar-event{
   width: 20rem;
   border: 1px solid red;
   margin: .5rem;
 }
 table{
+  width: 100%;
   border: 1px solid var(--navbarGrey);
   margin: 0;
   padding: 0;
