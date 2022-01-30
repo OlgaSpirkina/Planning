@@ -21,20 +21,21 @@
   <section class="container-fluid">
     <div class="row">
       <div class="col-12 d-flex justify-content-around align-items-start">
-        <div class="list-of-trainers">
-          <p><b>List des professeurs</b></br>clicker sur le nom de professeur pour voir sa fiche</p>
+        <div class="list-of-trainers my-2">
+          <h3>Liste des professeurs</h3>
+          <p>clicker sur le nom de professeur pour voir sa fiche</p>
           <table style="width: 100%">
             <thead>
               <th>Last Name</th>
               <th>First Name</th>
-              <th>Portrait</th>
+              <th>Numéro de téléphone</th>
             </thead>
             <tbody>
               {{#each result}}
               <tr>
                 <td><a href="/trainer/{{this.name}}{{this.fname}}">{{this.fname}}</a></td>
                 <td><a href="/trainer/{{this.name}}{{this.fname}}">{{this.name}}</a></td>
-                <td><a href="/trainer/{{this.name}}{{this.fname}}"><img src="../../public/img/pet1.jpg" al="{{this.name}}{{this.fname}}"/></a></td>
+                <td><a href="/trainer/{{this.name}}{{this.fname}}">{{this.mobile}}</a></td>
               </tr>
               {{/each}}
             </tbody>

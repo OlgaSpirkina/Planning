@@ -32,13 +32,33 @@
 .list-of-trainers{
   width: 45vw;
   border: 1px solid var(--darkBlue);
-  border-radius: .5rem;
-  margin: 1rem;
   padding: 1rem;
+  h3{
+    margin: 1rem 0;
+    font-size: 3rem;
+    line-height: 4.25rem;
+    font-weight: 800;
+  }
   table{
     width: 100%;
     margin: 0;
     padding: 0;
+    tr{
+      cursor: pointer;
+    }
+    tbody tr:hover{
+      background-color: var(--theYellow);
+      color: #fff;
+    }
+    td{
+      height: 3rem;
+      border: 1px solid var(--navbarGrey);
+      padding: .5rem;
+      a{
+        text-decoration: none;
+        color: inherit;
+      }
+    }
   }
   button{
     border: none;
@@ -77,6 +97,10 @@ form{
         border-radius: .5rem;
         background-color: var(--theYellow);
         color: #fff;
+        &:hover{
+          background-color: #fff;
+          color: var(--darkBlue);
+        }
       }
     }
   }
@@ -101,15 +125,34 @@ form{
     margin: 1rem 0;
   }
   select{
-    margin: 1rem 0;
     width: 30%;
+    margin: 1rem 0;
+    padding: .7rem 0;
+    border: none;
+    background-color: var(--lightGrey);
   }
   button{
     margin: 1rem 0;
     width: 10rem;
     padding: 0.7rem;
+    border: none;
     border-radius: .5rem;
     background-color: var(--theYellow);
     color: #fff;
+    &:hover{
+      background-color: #fff;
+      color: var(--darkBlue);
+    }
   }
+}
+/*** Entreprise page ***/
+.submit-entreprise{
+  width: 10rem;
+  margin: 0 auto;
+}
+.heading-lg{
+  margin: 1rem 0;
+  font-size: 2.5rem;
+  line-height: 4.25rem;
+  font-weight: 800;
 }

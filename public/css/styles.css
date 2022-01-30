@@ -35,14 +35,34 @@
 .list-of-trainers {
   width: 45vw;
   border: 1px solid var(--darkBlue);
-  border-radius: 0.5rem;
-  margin: 1rem;
   padding: 1rem;
+}
+.list-of-trainers h3 {
+  margin: 1rem 0;
+  font-size: 3rem;
+  line-height: 4.25rem;
+  font-weight: 800;
 }
 .list-of-trainers table {
   width: 100%;
   margin: 0;
   padding: 0;
+}
+.list-of-trainers table tr {
+  cursor: pointer;
+}
+.list-of-trainers table tbody tr:hover {
+  background-color: var(--theYellow);
+  color: #fff;
+}
+.list-of-trainers table td {
+  height: 3rem;
+  border: 1px solid var(--navbarGrey);
+  padding: 0.5rem;
+}
+.list-of-trainers table td a {
+  text-decoration: none;
+  color: inherit;
 }
 .list-of-trainers button {
   border: none;
@@ -85,6 +105,10 @@ form fieldset .p-in-form .clear-form {
   background-color: var(--theYellow);
   color: #fff;
 }
+form fieldset .p-in-form .clear-form:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
+}
 
 .trainers-planning {
   width: 45vw;
@@ -107,16 +131,37 @@ form fieldset .p-in-form .clear-form {
   margin: 1rem 0;
 }
 .trainers-planning select {
-  margin: 1rem 0;
   width: 30%;
+  margin: 1rem 0;
+  padding: 0.7rem 0;
+  border: none;
+  background-color: var(--lightGrey);
 }
 .trainers-planning button {
   margin: 1rem 0;
   width: 10rem;
   padding: 0.7rem;
+  border: none;
   border-radius: 0.5rem;
   background-color: var(--theYellow);
   color: #fff;
+}
+.trainers-planning button:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
+}
+
+/*** Entreprise page ***/
+.submit-entreprise {
+  width: 10rem;
+  margin: 0 auto;
+}
+
+.heading-lg {
+  margin: 1rem 0;
+  font-size: 2.5rem;
+  line-height: 4.25rem;
+  font-weight: 800;
 }
 
 /*# sourceMappingURL=styles.css.map */

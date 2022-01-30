@@ -119,6 +119,7 @@ const createCalendarGroupedByMonths = (result) => {
     }
   }
   groupedByMonth[Object.keys(groupedByMonth)] = objMonth
+  console.log(chalk.blue.bold(util.inspect(groupedByMonth)))
   Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
     item.forEach((elem)=>{
       let timeNum = elem.time.split(":");
@@ -133,7 +134,7 @@ const createCalendarGroupedByMonths = (result) => {
 }
 //
 app.get('/', (req,res,next) => {
-  let sql = 'SELECT name, fname FROM trainers ORDER BY fname'
+  let sql = 'SELECT name, fname, mobile FROM trainers ORDER BY fname'
   conn.query(sql, function(err, result){
     if(err) throw err;
     req.flash('success', 'Data added successfully!')
