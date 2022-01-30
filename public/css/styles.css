@@ -22,6 +22,7 @@ body {
 }
 
 table {
+  width: 100%;
   border: 1px solid var(--navbarGrey);
   margin: 0;
   padding: 0;
