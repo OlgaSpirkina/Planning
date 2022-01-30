@@ -160,65 +160,62 @@ app.get('/trainer/:id', (req,res,next) => {
           email = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].email
           mobile = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].mobile
         // Calculating total and individual classes
-          if((objForAllClasses['yoga'] === undefined) || (objForAllClasses['pilates'] === undefined) || (objForAllClasses['other_classes'] === undefined)){
+          if((objForAllClasses['yoga'] === undefined) || (objForAllClasses['pilates'] === undefined) || (objForAllClasses['other_classes'] === undefined) || (objForAllClasses['video'] === undefined)){
             objForAllClasses['yoga'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10);
             objForAllClasses['pilates'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10);
             objForAllClasses['other_classes'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10);
+            objForAllClasses['video'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].video, 10);
             objForAllClasses['total'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
           }else{
             objForAllClasses['yoga'] = objForAllClasses.yoga + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
             objForAllClasses['pilates'] = objForAllClasses.pilates + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10)
             objForAllClasses['other_classes'] = objForAllClasses.other_classes + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10)
+            objForAllClasses['video'] = objForAllClasses.video + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].video, 10)
             objForAllClasses['total'] = objForAllClasses.total + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
           }
-        // Second object with salary for each class
-          if((objForSalary['yoga'] === undefined) || (objForSalary['pilates'] === undefined) || (objForSalary['other_classes'] === undefined)){
-            objForSalary['yoga'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10);
-            objForSalary['pilates'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10);
-            objForSalary['other_classes'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10);
-            objForSalary['total'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
-          }else{
-            objForSalary['yoga'] = objForSalary.yoga + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
-            objForSalary['pilates'] = objForSalary.pilates + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10)
-            objForSalary['other_classes'] = objForSalary.other_classes + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10)
-            objForSalary['total'] = objForSalary.total + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
+        }
+      }
+      const countSalary = () => {
+        for(let i=0; i<Object.keys(objForAllClasses).length; i++){
+          switch(Object.keys(objForAllClasses)[i]){
+            case 'yoga':
+              objForSalary['yoga'] = objForAllClasses.yoga * 50;
+              break;
+            case 'pilates':
+              objForSalary['pilates'] = objForAllClasses.pilates * 40;
+              break;
+            case 'video':
+              objForSalary['video'] = objForAllClasses.video * 30;
+              break;
+            case 'other_classes':
+              objForSalary['other_classes'] = objForAllClasses.other_classes * 30;
+              break;
           }
         }
+        return objForSalary
       }
-      for(let i=0; i<Object.keys(objForSalary).length; i++){
-        if(Object.keys(objForSalary)[i] === 'yoga'){
-          objForSalary['yoga'] = objForSalary.yoga * 50;
-        }
-        if(Object.keys(objForSalary)[i] === 'pilates'){
-          objForSalary['pilates'] = objForSalary.pilates * 40;
-        }
-        if(Object.keys(objForSalary)[i] === 'other_classes'){
-          objForSalary['other_classes'] = objForSalary.other_classes * 30;
-        }
-      }
-console.log(chalk.yellow.bold(util.inspect(objForAllClasses)))
-
+      let objCountSalary = countSalary()
       res.render('trainer', {
         title: trainerId,
         result: trainersPersonalPlanning,
         email: email,
         mobile: mobile,
         allClasses: objForAllClasses,
-        allSalaries: objForSalary
+        allSalaries: objCountSalary
       })
     }
   })
 })
 app.get('/trainersplanning/:id', (req,res,next) => {
   let trainerId = req.params.id
-  //console.log(chalk.cyan.bold(util.inspect(trainerId)))
-  let sql = 'SELECT * FROM trainers t WHERE t.username = ?'
-  conn.query(sql, [trainerId], function (err, result) {
+  conn.query('SELECT * FROM trainers t WHERE t.username = ?; SELECT company FROM companies ORDER BY company', [trainerId, 1, 2], function(err, result){
     if (err) throw err;
     else{
+      let company = result[1]
       res.render('trainersplanning', {
         title: trainerId,
-        result: result,
+        result: result[0],
+        company: company,
         months: months,
         years: years,
         currentMonth: formatedMonth,
@@ -227,17 +224,16 @@ app.get('/trainersplanning/:id', (req,res,next) => {
     }
   })
 })
-app.get('/hello', (req,res,next) => {
+app.get('/planning', (req,res,next) => {
   let sql = 'SELECT * FROM schedule'
   conn.query(sql, function (err, result) {
     if (err) throw err;
     else{
       let allTrainersPlanning = createCalendarGroupedByMonths(result)
-      //console.log(chalk.cyan.bold(util.inspect(Object.keys(Object.values(Object.values(groupedByMonth))[0]))))
-      res.render('hello', {
+      res.render('planning', {
         result: result,
         cal: allTrainersPlanning,
-        title: 'Hello !',
+        title: 'planning !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,
         currentYear: currentYear,
@@ -246,8 +242,33 @@ app.get('/hello', (req,res,next) => {
     }
   })
 })
-app.post('/hello', (req,res,next) => {
-  let name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, other_classes, total_classes, sqlClass;
+app.get('/entreprises', (req,res,next) => {
+  let sql = 'SELECT * FROM companies ORDER BY company'
+  conn.query(sql, function (err, result) {
+    if (err) throw err;
+    else{
+      res.render('entreprises', {
+        result: result
+      })
+    }
+  })
+})
+app.get('/company-details/:id', (req,res,next) => {
+  let companyId = req.params.id
+  let sql = 'SELECT * FROM companies c JOIN schedule s ON c.company = s.company JOIN trainers t ON t.id = s.trainer_id AND c.contact_info = ?';
+  conn.query(sql, [companyId], function (err, result) {
+    if (err) throw err;
+    else{
+      let groupedByUsername = groupBy(result, 'username')
+      console.log(chalk.cyan.bold(util.inspect(result)))
+      res.render('company-details', {
+        result: groupedByUsername
+      })
+    }
+  })
+})
+app.post('/planning', (req,res,next) => {
+  let name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, video, other_classes, total_classes, sqlClass;
   name = req.body.name;
   fname = req.body.fname;
   trainer_id = req.body.trainer_id;
@@ -258,14 +279,15 @@ app.post('/hello', (req,res,next) => {
   time = req.body.time,
   yoga = req.body.yoga;
   pilates = req.body.pilates;
+  video = req.body.video;
   other_classes = req.body.other_classes;
   total_classes = req.body.total_classes;
-  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${choose_months}", "${choose_years}", "${company}", "${date}", "${time}", "${yoga}","${pilates}", "${other_classes}", "${total_classes}")`;
+  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, video, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${choose_months}", "${choose_years}", "${company}", "${date}", "${time}", "${yoga}","${pilates}", "${video}", "${other_classes}", "${total_classes}")`;
   conn.query(sqlClass, function(err, result){
     if(err) throw err;
     console.log(chalk.cyan.bold('Data added successfully into schedule!'))
     req.flash('success', 'Data added successfully into schedule!')
-    res.redirect('/hello')
+    res.redirect('/planning')
   })
 })
 app.post('/', (req,res,next) => {
@@ -278,12 +300,25 @@ app.post('/', (req,res,next) => {
   sql = `INSERT INTO trainers (name, fname, username, email, mobile) VALUES ("${name}", "${fname}", "${username}", "${email}", "${mobile}")`;
   conn.query(sql, function(err, result){
     if(err) throw err;
-    console.log(chalk.cyan.bold('record inserted'))
-    req.flash('success', 'Data added successfully!')
+    console.log(chalk.cyan.bold('trainer info inserted'))
+    req.flash('success', 'Trainer info added successfully!')
     res.redirect('/')
   })
 })
-
+app.post('/entreprises', (req,res,next) => {
+  let company, company_adress, contact_name, contact_info, sql;
+  company = req.body.company;
+  company_adress = req.body.company_adress;
+  contact_name = req.body.contact_name;
+  contact_info = req.body.contact_info;
+  sql = `INSERT INTO companies (company, company_adress, contact_name, contact_info) VALUES ("${company}", "${company_adress}", "${contact_name}", "${contact_info}")`;
+  conn.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(chalk.cyan.bold('company info inserted'))
+    req.flash('success', 'Company info added successfully!')
+    res.redirect('/entreprises')
+  })
+})
 /*
 app.use(function(req,res,next){
   next(createError(404))

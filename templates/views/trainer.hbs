@@ -13,7 +13,7 @@
   <script src="/js/hello.js" type="text/javascript" defer></script>
   <title>Trainers Page</title>
 </head>
-<body>
+<body class="body">
   {{>header}}
   <section class="container-fluid">
     <h1>{{title}}</h1>
@@ -26,6 +26,7 @@
         <p>Yoga: {{allClasses.yoga}} cours. Somme totale: <b>{{allSalaries.yoga}}€</b></p>
         <p>Pilates: {{allClasses.pilates}} cours. Somme totale: <b>{{allSalaries.pilates}}€</b></p>
         <p>Autres cours: {{allClasses.other_classes}} cours. Somme totale: <b>{{allSalaries.other_classes}}€</b></p>
+        <p>Visio: {{allClasses.video}} cours. Somme totale: <b>{{allSalaries.video}}€</b></p>
         <p><b>Total cours: {{allClasses.total}}</b></p>
       </div>
     </div>

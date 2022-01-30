@@ -8,7 +8,7 @@
   <script src="/js/app.js" type="text/javascript" defer></script>
   <title>Trainers Page</title>
 </head>
-<body>
+<body class="body">
   {{>header}}
   <section>
     <p>Créez des nouveaux horaires</p>
@@ -47,7 +47,12 @@
        </p>
        <p>
          <label for="company">Entreprise:</label>
-         <input type="text" id="company" name="company">
+         <select name="company" id="company">
+           <option selected>Choisissez l'entreprise</option>
+           {{#each company}}
+           <option value="{{this.company}}">{{this.company}}</option>
+           {{/each}}
+         </select>
        </p>
        <p>
          <label for="date">Date:</label>
@@ -64,6 +69,10 @@
        <p>
          <label for="pilates">Cours: Pilates</label>
          <input type="number" id="pilates" name="pilates" required>
+       </p>
+       <p>
+         <label for="video">Cours: Visio</label>
+         <input type="number" id="video" name="video" required>
        </p>
        <p>
          <label for="other_classes">Cours: Autre</label>
