@@ -1,18 +1,28 @@
 :root {
   --brownBackground: #291d1f;
+  --blueBarckground: #0068BA;
   --navbarGrey: #1d2529;
+  --darkBlue: #004479;
   --mainReddish: #CF0034;
   --lightGrey: #A79B8D;
-  --theYellow: #ffba00;
+  --theYellow: #f19711;
+  --mainfontColor: #212529;
+  --mainfont: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
+.body {
   margin: 0;
   padding: 0;
+  font-family: "Open Sans";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--mainfontColor);
+  text-align: left;
 }
 
 .parent-calendar-event {
@@ -21,14 +31,92 @@ body {
   margin: 0.5rem;
 }
 
-table {
-  border: 1px solid var(--navbarGrey);
+/*** index table with trainers' names & form with select ***/
+.list-of-trainers {
+  width: 45vw;
+  border: 1px solid var(--darkBlue);
+  border-radius: 0.5rem;
+  margin: 1rem;
+  padding: 1rem;
+}
+.list-of-trainers table {
+  width: 100%;
   margin: 0;
   padding: 0;
 }
-
-button {
+.list-of-trainers button {
   border: none;
+}
+
+form {
+  width: 45vw;
+  background-color: var(--blueBarckground);
+  color: #fff;
+}
+form fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem;
+}
+form fieldset legend {
+  margin: 1rem;
+  font-size: 3rem;
+  line-height: 4.25rem;
+  font-weight: 800;
+}
+form fieldset .p-in-form {
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+}
+form fieldset .p-in-form input {
+  height: 2.7rem;
+  margin-top: 0.5rem;
+  border: none;
+  background-color: var(--darkBlue);
+}
+form fieldset .p-in-form .clear-form {
+  width: 7rem;
+  padding: 0.7rem;
+  margin-top: 2rem;
+  border-radius: 0.5rem;
+  background-color: var(--theYellow);
+  color: #fff;
+}
+
+.trainers-planning {
+  width: 45vw;
+  margin: 2rem 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--blueBarckground);
+  color: #fff;
+}
+.trainers-planning .legend {
+  margin: 1rem;
+  font-size: 2.5rem;
+  line-height: 4.25rem;
+  font-weight: 800;
+}
+.trainers-planning label {
+  margin: 1rem 0;
+}
+.trainers-planning select {
+  margin: 1rem 0;
+  width: 30%;
+}
+.trainers-planning button {
+  margin: 1rem 0;
+  width: 10rem;
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  background-color: var(--theYellow);
+  color: #fff;
 }
 
 /*# sourceMappingURL=styles.css.map */
