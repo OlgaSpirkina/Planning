@@ -77,14 +77,6 @@ const years = [
   2024,
   2025
 ]
-let today = new Date();
-let currentMonth = today.getMonth();
-let currentYear = today.getFullYear();
-let firstDay = (new Date(currentYear, currentMonth)).getDay();
-let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
-let options = { month: 'long'};
-let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
-formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
 //
 /*** Function to create an object grouped by Month for Calendar ***/
 let startOfClasses = [];
@@ -104,33 +96,6 @@ const createCalendarGroupedByMonths = (result) => {
       }
     }
   }
-  let objMonth = {};
-  for(let i=1; i<=daysInMonth; i++){
-    let theDate = new Date(currentYear, currentMonth, i);
-    objMonth[theDate] = []
-  }
-  let groupedByMonth = groupBy(result, 'choose_months')
-  groupedByMonth[Object.keys(groupedByMonth)] = groupBy(Object.values(groupedByMonth)[0], 'date')
-  for(let i=0; i<Object.keys(objMonth).length; i++){
-    for(let j=0; j<Object.keys(Object.values(groupedByMonth)[0]).length; j++){
-      if(Object.keys(objMonth)[i] === Object.keys(Object.values(groupedByMonth)[0])[j]){
-          objMonth[Object.keys(objMonth)[i]] = Object.values(Object.values(groupedByMonth)[0])[j]
-      }
-    }
-  }
-  groupedByMonth[Object.keys(groupedByMonth)] = objMonth
-  console.log(chalk.blue.bold(util.inspect(groupedByMonth)))
-  Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
-    item.forEach((elem)=>{
-      let timeNum = elem.time.split(":");
-      let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
-      elem['timeNumInSeconds'] = timeNumInSeconds
-    })
-    item.sort(function(a, b){
-      return a.timeNumInSeconds - b.timeNumInSeconds
-    })
-  })
-  return groupedByMonth;
 }
 //
 app.get('/', (req,res,next) => {
@@ -230,14 +195,103 @@ app.get('/planning', (req,res,next) => {
   conn.query(sql, function (err, result) {
     if (err) throw err;
     else{
-      let allTrainersPlanning = createCalendarGroupedByMonths(result)
+      let objectForAllMonths = {}
+      let countDaysInMonth = 0
+      for(let i=0; i<=11; i++){
+        for(let j=0; j<months.length; j++){
+          if(i === j){
+            countDaysInMonth = 32 - new Date(2022, i, 32).getDate();
+            objectForAllMonths[months[j]] = countDaysInMonth;
+            countDaysInMonth = 0
+          }
+        }
+      }
+      /*
+
+      const jan = new Date(2022, 1, 1)
+      let today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
+      let firstDay = (new Date(currentYear, currentMonth)).getDay();
+      let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
+      let options = { month: 'long'};
+      let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
+      formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
+*/
+      let objMonth = {};
+      let newObjectForAllMonths = {}
+      Object.values(objectForAllMonths).forEach((item, index) => {
+
+        for(let j=0; j<Object.keys(objectForAllMonths).length; j++){
+          if(index === j){
+            for(let i=1; i<=item; i++){
+              let theDate = new Date(2022, j, i);
+              objMonth[theDate] = []
+            }
+            newObjectForAllMonths[Object.keys(objectForAllMonths)[j]] = objMonth
+            objMonth = {}
+          }
+
+        }
+      })
+      let groupedByMonth = groupBy(result, 'choose_months');
+      let newGroupedByMonth = {}
+      Object.values(groupedByMonth).forEach((item, index) => {
+        for(let i=0; i<Object.keys(groupedByMonth).length; i++){
+          if(i === index){
+            newGroupedByMonth[Object.keys(groupedByMonth)[i]] = groupBy(item, 'date')
+          }
+        }
+      })
+      for(let i=0; i<Object.keys(newObjectForAllMonths).length; i++){
+        for(let j=0; j<Object.keys(newGroupedByMonth).length; j++){
+          if(Object.keys(newObjectForAllMonths)[i] === Object.keys(newGroupedByMonth)[j]){
+            for(let x=0; x<Object.values(newGroupedByMonth).length; x++){
+              for(let a=0; a<Object.keys(Object.values(newGroupedByMonth)[x]).length; a++){
+                for(let y=0; y<Object.values(newObjectForAllMonths).length; y++){
+                  for(let b=0; b<Object.keys(Object.values(newObjectForAllMonths)[y]).length; b++){
+                    if(Object.keys(Object.values(newObjectForAllMonths)[y])[b] === Object.keys(Object.values(newGroupedByMonth)[x])[a]){
+                      for(let c=0; c<Object.values(Object.values(newGroupedByMonth)[x]).length; c++){
+                        if(a === c){
+                          Object.values(newObjectForAllMonths)[y][Object.keys(Object.values(newObjectForAllMonths)[y])[b]] = Object.values(Object.values(newGroupedByMonth)[x])[c]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      // The Calendar 2022
+      console.log(chalk.yellow.bold(util.inspect(newObjectForAllMonths)))
+
+      /*
+      groupedByMonth[Object.keys(groupedByMonth)] = objMonth
+      Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
+        item.forEach((elem)=>{
+          let timeNum = elem.time.split(":");
+          let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
+          elem['timeNumInSeconds'] = timeNumInSeconds
+        })
+        item.sort(function(a, b){
+          return a.timeNumInSeconds - b.timeNumInSeconds
+        })
+      })
+      */
+      //return groupedByMonth;
+
+
+
+      //let allTrainersPlanning = createCalendarGroupedByMonths(result)
       res.render('planning', {
         result: result,
-        cal: allTrainersPlanning,
+        //cal: allTrainersPlanning,
         title: 'planning !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,
-        currentYear: currentYear,
+        //currentYear: currentYear,
         days: days
       })
     }
