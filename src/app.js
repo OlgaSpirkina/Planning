@@ -84,6 +84,7 @@ const createCalendarGroupedByMonths = (result) => {
   let daysOfWeek = [];
   (()=>{
     for(let i=0; i<result.length; i++){
+      //startOfClasses.push(moment(result[i].time).local('fr').format('LT'));
       startOfClasses.push(moment(result[i].time).local('fr').format('LT'));
       daysOfWeek.push(moment(result[i].date).local('fr').format('L'))
     }
@@ -96,6 +97,7 @@ const createCalendarGroupedByMonths = (result) => {
       }
     }
   }
+
 }
 //
 app.get('/', (req,res,next) => {
@@ -116,11 +118,29 @@ app.get('/trainer/:id', (req,res,next) => {
   conn.query(sql, [trainerId], function (err, result) {
     if (err) throw err;
     else{
-      let trainersPersonalPlanning = createCalendarGroupedByMonths(result)
+      let trainerPersoPlanning = groupBy(result, 'choose_months');
+
+      //let trainersPersonalPlanning = createCalendarGroupedByMonths(result)
       let email, mobile;
       let countClasses = []
+      let objByMonth = {}
       let objForAllClasses = {}
       let objForSalary = {}
+
+      for(let j=0; j<Object.keys(trainerPersoPlanning).length; j++){
+        for(let i=0; i<Object.values(trainerPersoPlanning).length; i++){
+          if(i === j){
+            objByMonth[Object.keys(trainerPersoPlanning)[j]] = []
+            for(let y=0; y<Object.values(Object.values(trainerPersoPlanning)[i]).length; y++){
+              email = Object.values(Object.values(trainerPersoPlanning)[i])[y].email
+              mobile = Object.values(Object.values(trainerPersoPlanning)[i])[y].mobile
+              console.log(chalk.red.bold(util.inspect(Object.values(Object.values(trainerPersoPlanning)[i])[y])))
+            }
+          }
+        }
+      }
+
+/*
       for(let i=0; i<Object.values(Object.values(trainersPersonalPlanning)[0]).length; i++){
         if(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0] !== undefined){
           email = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].email
@@ -161,13 +181,16 @@ app.get('/trainer/:id', (req,res,next) => {
         return objForSalary
       }
       let objCountSalary = countSalary()
+      */
       res.render('trainer', {
         title: trainerId,
-        result: trainersPersonalPlanning,
+        //result: trainersPersonalPlanning,
         email: email,
-        mobile: mobile,
+        mobile: mobile
+        /*,
         allClasses: objForAllClasses,
         allSalaries: objCountSalary
+        */
       })
     }
   })
@@ -191,6 +214,14 @@ app.get('/trainersplanning/:id', (req,res,next) => {
   })
 })
 app.get('/planning', (req,res,next) => {
+  res.render('planning', {
+    title: 'Planning',
+    months: months
+  })
+})
+app.get('/plannings/:id', (req,res,next) => {
+  let planningByMonthID = req.params.id
+  let objectForEachMonth = {}
   let sql = 'SELECT * FROM schedule'
   conn.query(sql, function (err, result) {
     if (err) throw err;
@@ -209,15 +240,16 @@ app.get('/planning', (req,res,next) => {
       /*
 
       const jan = new Date(2022, 1, 1)
-      let today = new Date();
+
       let currentMonth = today.getMonth();
-      let currentYear = today.getFullYear();
+
       let firstDay = (new Date(currentYear, currentMonth)).getDay();
       let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
       let options = { month: 'long'};
       let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
       formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
 */
+      let today = new Date();
       let objMonth = {};
       let newObjectForAllMonths = {}
       Object.values(objectForAllMonths).forEach((item, index) => {
@@ -265,33 +297,48 @@ app.get('/planning', (req,res,next) => {
         }
       }
       // The Calendar 2022
-      console.log(chalk.yellow.bold(util.inspect(newObjectForAllMonths)))
 
-      /*
-      groupedByMonth[Object.keys(groupedByMonth)] = objMonth
-      Object.values(Object.values(Object.values(groupedByMonth))[0]).forEach((item) => {
+      for(let i=0; i<Object.keys(newObjectForAllMonths).length; i++){
+        for(let j=0; j<Object.values(newObjectForAllMonths).length; j++){
+          if((planningByMonthID === Object.keys(newObjectForAllMonths)[i]) && (i === j)){
+            objectForEachMonth[Object.keys(newObjectForAllMonths)[i]] = Object.values(newObjectForAllMonths)[j]
+          }
+        }
+      }
+
+
+    //  groupedByMonth[Object.keys(groupedByMonth)] = objMonth
+      Object.values(Object.values(Object.values(objectForEachMonth))[0]).forEach((item) => {
         item.forEach((elem)=>{
+          var time = elem.time.toLocaleTimeString('fr-FR');
+          elem.time = time.slice(0,5)
+          console.log(chalk.yellow.bold(util.inspect(elem)))
+          /*
           let timeNum = elem.time.split(":");
           let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
           elem['timeNumInSeconds'] = timeNumInSeconds
+          */
         })
+        /*
         item.sort(function(a, b){
           return a.timeNumInSeconds - b.timeNumInSeconds
         })
+        */
       })
-      */
+
       //return groupedByMonth;
 
 
 
       //let allTrainersPlanning = createCalendarGroupedByMonths(result)
-      res.render('planning', {
+      res.render('plannings', {
         result: result,
+        objectForEachMonth: objectForEachMonth,
         //cal: allTrainersPlanning,
         title: 'planning !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,
-        //currentYear: currentYear,
+        currentYear: today.getFullYear(),
         days: days
       })
     }

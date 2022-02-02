@@ -15,21 +15,16 @@
     <!-- JS -->
   <script src="/js/hello.js" type="text/javascript" defer></script>
   <script src="/js/header.js" type="text/javascript" defer></script>
-  <title>Hello Page</title>
+  <title>Monthly Planning</title>
 </head>
 <body class="body">
   {{>header}}
-  <section>
-    <h1>{{title}}</h1>
-    {{#each months}}
-      <p><a href="/plannings/{{this}}">{{this}}</a></p>
-    {{/each}}
-  </section>
+
   <section class="container-fluid">
-    <!--
     <div class="row">
       <div class="col-12 d-flex flex-column">
-        <h3 class="text-center">{{#each cal}}{{@key}}{{/each}} {{currentYear}}</h3>
+        <h3 class="text-center">{{#each objectForEachMonth}}<span id="current-month">{{@key}}</span>{{/each}} {{currentYear}}</h3>
+<!--
         <table>
           <thead>
             {{#each days}}
@@ -41,8 +36,9 @@
             </tr>
           </tbody>
         </table>
-        {{#each cal}}
-        <div class="d-flex flex-wrap">
+-->
+        <div class="d-flex flex-wrap justify-content-evenly align-items-center">
+          {{#each objectForEachMonth}}
           {{#each this}}
           <div class="parent-calendar-event">
             <h5 class="formated-day">{{@key}}</h5>
@@ -54,20 +50,18 @@
             {{/each}}
           </div>
           {{/each}}
+          {{/each}}
         </div>
-        {{/each}}
       </div>
     </div>
-  -->
   </section>
 
   <section class="container-fluid">
     <div class="row">
       <div class="d-flex flex-column justify-content-center align-items-center">
-
         <div>
-          <button class="btn-lg m-1 btn-success">Mois Précedent</button>
-          <button class="btn-lg m-1 btn-warning">Mois Suivant</button>
+          <button class="month-btn previous-btn"><a id="previous-month">Mois Précedent</a></button>
+          <button class="month-btn next-btn"><a id="next-month">Mois Suivant</a></button>
         </div>
         </div>
       </div>

@@ -27,8 +27,10 @@
 
 .parent-calendar-event {
   width: 20rem;
-  border: 1px solid red;
+  min-height: 22rem;
+  border: 1px solid var(--darkBlue);
   margin: 0.5rem;
+  padding: 1rem;
 }
 
 /*** index table with trainers' names & form with select ***/
@@ -162,6 +164,28 @@ form fieldset .p-in-form .clear-form:hover {
   font-size: 2.5rem;
   line-height: 4.25rem;
   font-weight: 800;
+}
+
+/*** Planning and Monthly planning page ***/
+.month-btn {
+  width: 8rem;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 0.5rem;
+}
+
+.month-btn a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.previous-btn {
+  background-color: var(--blueBarckground);
+}
+
+.next-btn {
+  background-color: var(--theYellow);
 }
 
 /*# sourceMappingURL=styles.css.map */
