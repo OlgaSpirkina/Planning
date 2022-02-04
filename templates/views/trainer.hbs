@@ -26,22 +26,36 @@
   </section>
   <section class="container-fluid">
     <div class="row">
-      <div class="col-12">
-        <!--
-        <p>Yoga: {{allClasses.yoga}} cours. Somme totale: <b>{{allSalaries.yoga}}€</b></p>
-        <p>Pilates: {{allClasses.pilates}} cours. Somme totale: <b>{{allSalaries.pilates}}€</b></p>
-        <p>Autres cours: {{allClasses.other_classes}} cours. Somme totale: <b>{{allSalaries.other_classes}}€</b></p>
-        <p>Visio: {{allClasses.video}} cours. Somme totale: <b>{{allSalaries.video}}€</b></p>
-        <p><b>Total cours: {{allClasses.total}}</b></p>
+      <div class="col-3 d-flex flex-column justify-content-start align-items-center">
+          {{#each allClasses}}
+          <div style="border: 1px solid #666; width: 20rem; margin: .5rem">
+            <p><b>{{@key}}</b></p>
+            <p>Yoga: {{this.yoga}} cours.</p>
+            <p>Pilates: {{this.pilates}} cours.</p>
+            <p>Autres cours: {{this.other_classes}} cours.</p>
+            <p>Visio: {{this.video}} cours.</p>
+            <p><b style="color: red">Total cours: {{this.total}}</b></p>
+          </div>
+          {{/each}}
       </div>
-    -->
+      <div class="col-3 d-flex flex-column justify-content-start align-items-center">
+          {{#each allSalaries}}
+          <div style="border: 1px solid #666; width: 20rem; margin: .5rem">
+            <p><b>{{@key}}</b></p>
+            <p>Yoga: {{this.yoga}}€.</p>
+            <p>Pilates: {{this.pilates}}€.</p>
+            <p>Autres cours: {{this.other_classes}}€.</p>
+            <p>Visio: {{this.video}}€.</p>
+          </div>
+          {{/each}}
+      </div>
     </div>
   </section>
   <section class="container-fluid">
     <div class="row">
-        <div class="col-12 d-flex flex-wrap">
-          <!--
         {{#each result}}
+        <h1>{{@key}}</h1>
+        <div class="col-12 d-flex flex-wrap">
           {{#each this}}
           <div class="parent-calendar-event">
             <h5 class="formated-day">{{@key}}</h5>
@@ -50,14 +64,15 @@
               <p>début des cours: {{this.time}} chez {{this.company}} de {{this.total_classes}} heurs</p>
               <p>yoga: {{this.yoga}}</p>
               <p>pilates: {{this.pilates}}</p>
+              <p>visio: {{this.video}}</p>
               <p>autre cours: {{this.other_classes}}</p>
             </div>
             {{/each}}
           </div>
           {{/each}}
-        {{/each}}
-      -->
+
         </div>
+        {{/each}}
     </div>
   </section>
 </body>

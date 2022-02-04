@@ -77,6 +77,16 @@ const years = [
   2024,
   2025
 ]
+// Format the time
+const formatedTime = (anArr) => {
+  anArr.forEach((item) => {
+    item.forEach((elem)=>{
+      var time = elem.time.toLocaleTimeString('fr-FR');
+      elem.time = time.slice(0,5)
+    })
+  })
+  return anArr
+}
 //
 /*** Function to create an object grouped by Month for Calendar ***/
 let startOfClasses = [];
@@ -119,78 +129,75 @@ app.get('/trainer/:id', (req,res,next) => {
     if (err) throw err;
     else{
       let trainerPersoPlanning = groupBy(result, 'choose_months');
-
-      //let trainersPersonalPlanning = createCalendarGroupedByMonths(result)
       let email, mobile;
       let countClasses = []
       let objByMonth = {}
       let objForAllClasses = {}
       let objForSalary = {}
-
+      let countYoga = 0;
+      let countPilates = 0;
+      let countOtherClasses =0;
+      let countVideos = 0;
+      let countTotal = 0;
       for(let j=0; j<Object.keys(trainerPersoPlanning).length; j++){
         for(let i=0; i<Object.values(trainerPersoPlanning).length; i++){
           if(i === j){
-            objByMonth[Object.keys(trainerPersoPlanning)[j]] = []
+            objByMonth[Object.keys(trainerPersoPlanning)[j]] = objForAllClasses
             for(let y=0; y<Object.values(Object.values(trainerPersoPlanning)[i]).length; y++){
+
               email = Object.values(Object.values(trainerPersoPlanning)[i])[y].email
               mobile = Object.values(Object.values(trainerPersoPlanning)[i])[y].mobile
-              console.log(chalk.red.bold(util.inspect(Object.values(Object.values(trainerPersoPlanning)[i])[y])))
+              Object.keys(objByMonth).forEach((month) => {
+                if(Object.values(Object.values(trainerPersoPlanning)[i])[y].choose_months === month){
+                  if(Object.values(Object.values(trainerPersoPlanning)[i])[y].yoga) countYoga += parseInt(Object.values(Object.values(trainerPersoPlanning)[i])[y].yoga, 10);
+                  if(Object.values(Object.values(trainerPersoPlanning)[i])[y].pilates)countPilates += parseInt(Object.values(Object.values(trainerPersoPlanning)[i])[y].pilates, 10);
+                  if(Object.values(Object.values(trainerPersoPlanning)[i])[y].other_classes)countOtherClasses += parseInt(Object.values(Object.values(trainerPersoPlanning)[i])[y].other_classes, 10);
+                  if(Object.values(Object.values(trainerPersoPlanning)[i])[y].video)countVideos += parseInt(Object.values(Object.values(trainerPersoPlanning)[i])[y].video, 10);
+                  if(Object.values(Object.values(trainerPersoPlanning)[i])[y].total_classes)countTotal += parseInt(Object.values(Object.values(trainerPersoPlanning)[i])[y].total_classes, 10);
+                  objByMonth[month] = {
+                    "yoga": countYoga,
+                    "pilates": countPilates,
+                    "other_classes": countOtherClasses,
+                    "total": countTotal
+                  }
+                }
+              })
             }
           }
         }
+        countYoga = 0;
+        countPilates = 0;
+        countOtherClasses = 0;
+        countTotal = 0;
+        countVideos = 0;
       }
+//Clone object with number of classes to countSalary
 
-/*
-      for(let i=0; i<Object.values(Object.values(trainersPersonalPlanning)[0]).length; i++){
-        if(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0] !== undefined){
-          email = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].email
-          mobile = Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].mobile
-        // Calculating total and individual classes
-          if((objForAllClasses['yoga'] === undefined) || (objForAllClasses['pilates'] === undefined) || (objForAllClasses['other_classes'] === undefined) || (objForAllClasses['video'] === undefined)){
-            objForAllClasses['yoga'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10);
-            objForAllClasses['pilates'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10);
-            objForAllClasses['other_classes'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10);
-            objForAllClasses['video'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].video, 10);
-            objForAllClasses['total'] = parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
-          }else{
-            objForAllClasses['yoga'] = objForAllClasses.yoga + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].yoga, 10)
-            objForAllClasses['pilates'] = objForAllClasses.pilates + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].pilates, 10)
-            objForAllClasses['other_classes'] = objForAllClasses.other_classes + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].other_classes, 10)
-            objForAllClasses['video'] = objForAllClasses.video + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].video, 10)
-            objForAllClasses['total'] = objForAllClasses.total + parseInt(Object.values(Object.values(trainersPersonalPlanning)[0])[i][0].total_classes, 10);
-          }
+    const salaryByMonth = Object.assign({}, JSON.parse(JSON.stringify(objByMonth)))
+    Object.values(salaryByMonth).forEach((theclass) => {
+      if(theclass['yoga'])theclass['yoga'] = theclass['yoga'] * 50;
+      if(theclass['pilates'])theclass['pilates'] = theclass['pilates'] * 40;
+      if(theclass['other_classes'])theclass['other_classes'] = theclass['other_classes'] * 30;
+      if(theclass['video'])theclass['video'] = theclass['video'] * 30;
+      if(theclass['total'])delete theclass['total']
+    })
+    // Group by day trainerPersoPlanning
+    Object.values(trainerPersoPlanning).forEach((month, monthindex) => {
+      Object.keys(trainerPersoPlanning).forEach((key, keyindex) => {
+        if(monthindex === keyindex){
+          trainerPersoPlanning[key] = groupBy(month, 'date')
         }
-      }
-      const countSalary = () => {
-        for(let i=0; i<Object.keys(objForAllClasses).length; i++){
-          switch(Object.keys(objForAllClasses)[i]){
-            case 'yoga':
-              objForSalary['yoga'] = objForAllClasses.yoga * 50;
-              break;
-            case 'pilates':
-              objForSalary['pilates'] = objForAllClasses.pilates * 40;
-              break;
-            case 'video':
-              objForSalary['video'] = objForAllClasses.video * 30;
-              break;
-            case 'other_classes':
-              objForSalary['other_classes'] = objForAllClasses.other_classes * 30;
-              break;
-          }
-        }
-        return objForSalary
-      }
-      let objCountSalary = countSalary()
-      */
+      })
+    })
+    formatedTime(Object.values(Object.values(trainerPersoPlanning)[0]));
+    console.log(chalk.green.bold(util.inspect(objByMonth)))
       res.render('trainer', {
         title: trainerId,
-        //result: trainersPersonalPlanning,
+        result: trainerPersoPlanning,
         email: email,
-        mobile: mobile
-        /*,
-        allClasses: objForAllClasses,
-        allSalaries: objCountSalary
-        */
+        mobile: mobile,
+        allClasses: objByMonth,
+        allSalaries: salaryByMonth
       })
     }
   })
@@ -253,7 +260,6 @@ app.get('/plannings/:id', (req,res,next) => {
       let objMonth = {};
       let newObjectForAllMonths = {}
       Object.values(objectForAllMonths).forEach((item, index) => {
-
         for(let j=0; j<Object.keys(objectForAllMonths).length; j++){
           if(index === j){
             for(let i=1; i<=item; i++){
@@ -263,7 +269,6 @@ app.get('/plannings/:id', (req,res,next) => {
             newObjectForAllMonths[Object.keys(objectForAllMonths)[j]] = objMonth
             objMonth = {}
           }
-
         }
       })
       let groupedByMonth = groupBy(result, 'choose_months');
@@ -305,30 +310,17 @@ app.get('/plannings/:id', (req,res,next) => {
           }
         }
       }
-
-
-    //  groupedByMonth[Object.keys(groupedByMonth)] = objMonth
+      formatedTime(Object.values(Object.values(Object.values(objectForEachMonth))[0]))
+      /*
       Object.values(Object.values(Object.values(objectForEachMonth))[0]).forEach((item) => {
         item.forEach((elem)=>{
           var time = elem.time.toLocaleTimeString('fr-FR');
           elem.time = time.slice(0,5)
           console.log(chalk.yellow.bold(util.inspect(elem)))
-          /*
-          let timeNum = elem.time.split(":");
-          let timeNumInSeconds = (parseInt(timeNum[0], 10) * 60 * 60) + (parseInt(timeNum[1], 10) * 60)
-          elem['timeNumInSeconds'] = timeNumInSeconds
-          */
+
         })
-        /*
-        item.sort(function(a, b){
-          return a.timeNumInSeconds - b.timeNumInSeconds
-        })
-        */
       })
-
-      //return groupedByMonth;
-
-
+*/
 
       //let allTrainersPlanning = createCalendarGroupedByMonths(result)
       res.render('plannings', {
