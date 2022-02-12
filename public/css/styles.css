@@ -3,6 +3,7 @@
   --blueBarckground: #0068BA;
   --navbarGrey: #1d2529;
   --darkBlue: #004479;
+  --darkGrey: #26252d;
   --mainReddish: #CF0034;
   --lightGrey: #A79B8D;
   --theYellow: #f19711;
@@ -164,6 +165,90 @@ form fieldset .p-in-form .clear-form:hover {
   font-size: 2.5rem;
   line-height: 4.25rem;
   font-weight: 800;
+}
+
+.list-of-companies {
+  width: 100%;
+  border: none;
+}
+.list-of-companies table tr td:nth-of-type(6n) {
+  color: var(--darkBlue);
+}
+.list-of-companies table tr td:nth-of-type(7n) button {
+  background-color: var(--blueBarckground);
+  padding: 0.3rem;
+  color: #fff;
+}
+.list-of-companies table tr td:nth-of-type(6n),
+.list-of-companies table tr td:nth-of-type(7n) {
+  text-align: center;
+}
+
+#update-the-company {
+  width: 100%;
+  background-color: var(--lightGrey);
+  color: var(--darkGrey);
+}
+#update-the-company fieldset {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#update-the-company fieldset legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.5rem;
+  line-height: normal;
+}
+#update-the-company fieldset legend div {
+  background-color: var(--theYellow);
+  padding: 0.5rem 1rem;
+  margin: 0.3rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+#update-the-company fieldset legend div:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
+}
+#update-the-company fieldset input[name=idput] {
+  pointer-events: none;
+  filter: brightness(1.75);
+}
+#update-the-company fieldset input[type=submit] {
+  width: 7rem;
+  padding: 0.7rem;
+  margin: 1rem 0;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--theYellow);
+  color: #fff;
+  cursor: pointer;
+}
+#update-the-company fieldset input[type=submit]:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
+}
+#update-the-company fieldset p {
+  display: flex;
+  flex-direction: column;
+}
+#update-the-company fieldset p:first-of-type {
+  width: 7rem;
+}
+#update-the-company fieldset p:nth-of-type(3n) {
+  width: 25rem;
+}
+#update-the-company fieldset p:nth-of-type(5n) {
+  width: 15rem;
+}
+#update-the-company fieldset p input {
+  margin: 0.3rem 0;
+  padding: 0.3rem;
+  background-color: var(--darkGrey);
+  color: #fff;
+  border: none;
 }
 
 /*** Planning and Monthly planning page ***/

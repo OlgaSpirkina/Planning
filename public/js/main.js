@@ -25,5 +25,5 @@ window.addEventListener('load', function () {
       theForm.reset();
       return false;
     })
-  }
+  }  
 })

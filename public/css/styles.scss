@@ -3,6 +3,7 @@
   --blueBarckground: #0068BA;
   --navbarGrey: #1d2529;
   --darkBlue: #004479;
+  --darkGrey: #26252d;
   --mainReddish: #CF0034;
   --lightGrey: #A79B8D;
   --theYellow: #f19711;
@@ -157,6 +158,95 @@ form{
   font-size: 2.5rem;
   line-height: 4.25rem;
   font-weight: 800;
+}
+// table of companies
+.list-of-companies{
+  width: 100%;
+  border: none;
+  table tr{
+    td:nth-of-type(6n){
+      color: var(--darkBlue);
+    }
+    td:nth-of-type(7n){
+      button{
+        background-color: var(--blueBarckground);
+        padding: .3rem;
+        color: #fff;
+      }
+    }
+    td:nth-of-type(6n),
+    td:nth-of-type(7n){
+      text-align: center;
+    }
+  }
+}
+// Form to update the company details
+#update-the-company{
+  width: 100%;
+  background-color: var(--lightGrey);
+  color: var(--darkGrey);
+  fieldset{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    legend{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.5rem;
+      line-height: normal;
+        div{
+          background-color: var(--theYellow);
+          padding: .5rem 1rem;
+          margin: .3rem;
+          border-radius: .3rem;
+          cursor: pointer;
+          &:hover{
+            background-color: #fff;
+            color: var(--darkBlue);
+          }
+        }
+    }
+    input[name=idput]{
+      pointer-events: none;
+      filter: brightness(1.75);
+    }
+    input[type=submit]{
+      width: 7rem;
+      padding: 0.7rem;
+      margin: 1rem 0;
+      border: none;
+      border-radius: .5rem;
+      background-color: var(--theYellow);
+      color: #fff;
+      cursor: pointer;
+      &:hover{
+        background-color: #fff;
+        color: var(--darkBlue);
+      }
+    }
+    p{
+      display: flex;
+      flex-direction: column;
+      &:first-of-type{
+        width: 7rem;
+      }
+      &:nth-of-type(3n){
+        width: 25rem;
+      }
+      &:nth-of-type(5n){
+        width: 15rem;
+      }
+      input{
+        margin: .3rem 0;
+        padding: .3rem;
+        background-color: var(--darkGrey);
+        color: #fff;
+        border: none;
+      }
+
+    }
+  }
 }
 /*** Planning and Monthly planning page ***/
 .month-btn{

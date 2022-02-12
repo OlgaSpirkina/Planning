@@ -49,9 +49,10 @@
          </p>
        </fieldset>
       </form>
-      <div id="update-query" class="mb-4">
+      <div class="mb-4 list-of-trainers list-of-companies">
         <h3 class="heading-lg">List des Entreprises</h3>
         <p>clicker sur le nom d'entreprise pour voir sa fiche</p>
+        <div id="update-query"></div>
         <table style="width: 80%">
           <thead>
             <th>Nom d'entreprise</th>
@@ -68,7 +69,7 @@
               <td><a class="contact_info" href="/company-details/{{this.contact_info}}">{{this.contact_info}}</a></td>
               <td class="id{{this.id}}" hidden><a class="contact_id" href="/company-details/{{this.contact_info}}">{{this.id}}</a></td>
               <td class="create-put-request">Modifier</td>
-              <td><button type="button" class="btn btn-info btn-lg create-delete-request" data-toggle="modal" data-target="#myModal" value="{{this.id}}">Supprimer</button></td>
+              <td><button type="button" class="create-delete-request" data-toggle="modal" data-target="#myModal" value="{{this.id}}">Supprimer</button></td>
             </tr>
             {{/each}}
           </tbody>

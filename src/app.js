@@ -158,6 +158,7 @@ app.get('/trainer/:id', (req,res,next) => {
                     "yoga": countYoga,
                     "pilates": countPilates,
                     "other_classes": countOtherClasses,
+                    "video": countVideos,
                     "total": countTotal
                   }
                 }
@@ -189,8 +190,24 @@ app.get('/trainer/:id', (req,res,next) => {
         }
       })
     })
-    formatedTime(Object.values(Object.values(trainerPersoPlanning)[0]));
-    console.log(chalk.green.bold(util.inspect(objByMonth)))
+    Object.values(trainerPersoPlanning).forEach((themonth) => {
+      console.log(chalk.blue.bold(util.inspect(themonth.length)))
+        Object.values(themonth).forEach((item) => {
+
+          //formatedTime(item)
+        })
+
+    })
+    Object.values(Object.values(trainerPersoPlanning)).forEach((themonth) => {
+
+
+    })
+    Object.values(trainerPersoPlanning).forEach((item) => {
+      formatedTime(Object.values(item))
+    })
+    //formatedTime(Object.values(Object.values(trainerPersoPlanning)[1]));
+    console.log(Object.values(Object.values(trainerPersoPlanning)[1]))
+
       res.render('trainer', {
         title: trainerId,
         result: trainerPersoPlanning,
@@ -203,11 +220,21 @@ app.get('/trainer/:id', (req,res,next) => {
   })
 })
 app.get('/trainersplanning/:id', (req,res,next) => {
+  const jan = new Date(2022, 1, 1)
+  let today = new Date()
+  let currentMonth = today.getMonth();
+  let currentYear = today.getFullYear();
+  let firstDay = (new Date(currentYear, currentMonth)).getDay();
+  let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
+  let options = { month: 'long'};
+  let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(today)
+  formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
   let trainerId = req.params.id
   conn.query('SELECT * FROM trainers t WHERE t.username = ?; SELECT company FROM companies ORDER BY company', [trainerId, 1, 2], function(err, result){
     if (err) throw err;
     else{
       let company = result[1]
+      console.log(chalk.cyan.bold(util.inspect(formatedMonth)))
       res.render('trainersplanning', {
         title: trainerId,
         result: result[0],
@@ -246,15 +273,8 @@ app.get('/plannings/:id', (req,res,next) => {
       }
       /*
 
-      const jan = new Date(2022, 1, 1)
 
-      let currentMonth = today.getMonth();
 
-      let firstDay = (new Date(currentYear, currentMonth)).getDay();
-      let daysInMonth = 32 - new Date(currentYear, currentMonth, 32).getDate();
-      let options = { month: 'long'};
-      let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(currentMonth)
-      formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
 */
       let today = new Date();
       let objMonth = {};
@@ -400,19 +420,47 @@ app.post('/', (req,res,next) => {
   })
 })
 app.post('/entreprises', (req,res,next) => {
-  let company, company_adress, contact_name, contact_info, sql;
-  company = req.body.company;
-  company_adress = req.body.company_adress;
-  contact_name = req.body.contact_name;
-  contact_info = req.body.contact_info;
-  sql = `INSERT INTO companies (company, company_adress, contact_name, contact_info) VALUES ("${company}", "${company_adress}", "${contact_name}", "${contact_info}")`;
-  conn.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log(chalk.cyan.bold('company info inserted'))
-    req.flash('success', 'Company info added successfully!')
-    res.redirect('/entreprises')
-  })
+  console.log(chalk.yellow.bold(util.inspect(req.body)))
+  if(req.body.idput){
+    const companyUpdateId = req.body.idput;
+    console.log(chalk.bold.red("update"))
+    let companyput, company_adressput, contact_nameput, contact_infoput, sql;
+    companyput = req.body.companyput;
+    company_adressput = req.body.company_adressput;
+    contact_nameput = req.body.contact_nameput;
+    contact_infoput = req.body.contact_infoput;
+    sql = `UPDATE companies SET company = "${companyput}", company_adress = "${company_adressput}", contact_name = "${contact_nameput}", contact_info = "${contact_infoput}" WHERE id = ?`;
+    conn.query(sql, [companyUpdateId], function (err, result) {
+      if (err) throw err;
+      console.log(chalk.cyan.bold('company info updated'))
+      req.flash('success', 'Company info updated successfully!')
+      res.redirect('/entreprises')
+    })
+  }else{
+    let company, company_adress, contact_name, contact_info, sql;
+    company = req.body.company;
+    company_adress = req.body.company_adress;
+    contact_name = req.body.contact_name;
+    contact_info = req.body.contact_info;
+    sql = `INSERT INTO companies (company, company_adress, contact_name, contact_info) VALUES ("${company}", "${company_adress}", "${contact_name}", "${contact_info}")`;
+    conn.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log(chalk.cyan.bold('company info inserted'))
+      req.flash('success', 'Company info added successfully!')
+      res.redirect('/entreprises')
+    })
+  }
 })
+app.get('/delete/:id', (req,res,next) => {
+  const id= req.params.id;
+  const sql = 'DELETE FROM companies WHERE id = ?';
+  conn.query(sql, [id], function (err, data) {
+  if (err) throw err;
+  console.log(chalk.bold.green.bgWhite("company was deleted"));
+});
+res.redirect('/entreprises');
+})
+
 /*
 app.use(function(req,res,next){
   next(createError(404))
