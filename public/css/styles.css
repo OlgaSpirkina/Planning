@@ -26,6 +26,25 @@
   text-align: left;
 }
 
+select:focus,
+textarea:focus,
+button:focus,
+input:focus {
+  outline: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .parent-calendar-event {
   width: 20rem;
   min-height: 22rem;
@@ -81,7 +100,7 @@ form fieldset {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  margin: 1rem;
+  margin: 1rem 0;
 }
 form fieldset legend {
   margin: 1rem;
@@ -271,6 +290,76 @@ form fieldset .p-in-form .clear-form:hover {
 
 .next-btn {
   background-color: var(--theYellow);
+}
+
+/*** Individual planning form ***/
+#trainers-planning-form {
+  width: 100%;
+}
+#trainers-planning-form fieldset {
+  padding: 0.5rem;
+}
+#trainers-planning-form fieldset p {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+#trainers-planning-form fieldset p:nth-of-type(-n+3) {
+  width: 33%;
+}
+#trainers-planning-form fieldset p:nth-child(n+4):nth-child(-n+8) {
+  width: 25%;
+  text-align: center;
+}
+#trainers-planning-form fieldset p:nth-child(9n), #trainers-planning-form fieldset p:last-of-type {
+  width: 100%;
+}
+#trainers-planning-form fieldset p:nth-child(9n) {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  input-height: 2rem;
+  input-text-align: center;
+}
+#trainers-planning-form fieldset p:nth-child(n+10):nth-child(-n+14) input {
+  width: 6rem;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  border: none;
+  border-radius: 0.3rem;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+#trainers-planning-form fieldset p:nth-child(n+10):nth-child(-n+14) input[name=total_classes] {
+  color: var(--theYellow);
+}
+#trainers-planning-form input {
+  background-color: var(--darkBlue);
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+}
+#trainers-planning-form input[name=trainer_id],
+#trainers-planning-form input[name=name],
+#trainers-planning-form input[name=fname] {
+  background-color: var(--theYellow);
+  pointer-events: none;
+}
+#trainers-planning-form input[type=submit] {
+  width: 7rem;
+  padding: 0.7rem;
+  margin: 1rem 0;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--theYellow);
+  color: #fff;
+  cursor: pointer;
+}
+#trainers-planning-form input[type=submit]:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -11,16 +11,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
     <!-- JS -->
-  <script src="/js/app.js" type="text/javascript" defer></script>
+  <script src="/js/createplanning.js" type="text/javascript" defer></script>
   <title>Trainers Page</title>
 </head>
 <body class="body">
   {{>header}}
   <section>
     <p>Créez des nouveaux horaires</p>
-    <form action="/planning" method="POST">
+    <form id="trainers-planning-form" action="/planning" method="POST">
      <fieldset>
-       <legend>Planning of {{result.[0].name}} {{result.[0].fname}}</legend>
+       <legend>Planning de {{result.[0].name}} {{result.[0].fname}}</legend>
        <p>
          <label for="trainer_id">Id:</label>
          <input type="text" value="{{result.[0].id}}" id="trainer_id" name="trainer_id">
@@ -65,30 +65,32 @@
          <input type="date" id="date" name="date" required>
        </p>
        <p>
-         <label for="time">Heurs:</label>
+         <label id="label-time" for="time">Heurs du début des cours:</label>
          <input type="datetime-local" id="time" name="time" required>
        </p>
        <p>
          <label for="yoga">Cours: Yoga</label>
-         <input type="number" id="yoga" name="yoga" required>
+         <input type="number" class="every-class" id="yoga" name="yoga" required>
        </p>
        <p>
          <label for="pilates">Cours: Pilates</label>
-         <input type="number" id="pilates" name="pilates" required>
+         <input type="number" class="every-class" id="pilates" name="pilates" required>
        </p>
        <p>
          <label for="video">Cours: Visio</label>
-         <input type="number" id="video" name="video" required>
+         <input type="number" class="every-class" id="video" name="video" required>
        </p>
        <p>
          <label for="other_classes">Cours: Autre</label>
-         <input type="number" id="other_classes" name="other_classes" required>
+         <input type="number" class="every-class" id="other_classes" name="other_classes" required>
        </p>
        <p>
          <label for="total_classes">Nombre total d'heurs par intervention:</label>
          <input type="number" id="total_classes" name="total_classes" required>
        </p>
-       <input type="submit" value="Submit">
+       <p>
+         <input type="submit" value="Submit">
+       </p>
      </fieldset>
     </form>
   </section>
