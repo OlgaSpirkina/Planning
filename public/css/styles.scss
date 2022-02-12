@@ -42,13 +42,18 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 // Styling calendar
+
 .parent-calendar-event{
-  width: 20rem;
+  width: 30rem;
   min-height: 22rem;
   border: 1px solid var(--darkBlue);
   margin: .5rem;
   padding: 1rem;
+  .daytimeclass{
+    min-height: 5rem;
+  }
 }
+
 /*** index table with trainers' names & form with select ***/
 .list-of-trainers{
   width: 45vw;

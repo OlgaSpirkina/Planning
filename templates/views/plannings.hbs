@@ -42,12 +42,38 @@
           {{#each this}}
           <div class="parent-calendar-event">
             <h5 class="formated-day">{{@key}}</h5>
-            {{#each this}}
-            <div style="border: 1px solid yellow; margin: .5rem">
-              <p>{{this.name}} {{this.fname}}</p>
-              <p>début des cours: {{this.time}} chez {{this.company}} de {{this.total_classes}} heurs</p>
-            </div>
-            {{/each}}
+              <div>
+                <div style="border: 1px solid pink; margin: .5rem" class="daytimeclass morning-class">
+                  {{#each this}}
+                  <div class="d-flex parent-data">
+                  <p>{{morning this.time}}</p>
+                  <p>{{this.name}} {{this.fname}}</p>
+                  <p>{{this.company}}</p>
+                  <p>{{this.total_classes}}</p>
+                  </div>
+                  {{/each}}
+                </div>
+                <div style="border: 1px solid grey; margin: .5rem" class="daytimeclass midday-class">
+                  {{#each this}}
+                  <div class="d-flex parent-data">
+                  <p>{{midday this.time}}</p>
+                  <p>{{this.name}} {{this.fname}}</p>
+                  <p>{{this.company}}</p>
+                  <p>{{this.total_classes}}</p>
+                  </div>
+                  {{/each}}
+                </div>
+                <div style="border: 1px solid brown; margin: .5rem" class="daytimeclass evening-class">
+                  {{#each this}}
+                  <div class="d-flex parent-data">
+                  <p>{{evening this.time}}</p>
+                  <p>{{this.name}} {{this.fname}}</p>
+                  <p>{{this.company}}</p>
+                  <p>{{this.total_classes}}</p>
+                  </div>
+                  {{/each}}
+                </div>
+              </div>
           </div>
           {{/each}}
           {{/each}}

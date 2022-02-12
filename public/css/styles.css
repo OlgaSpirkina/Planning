@@ -46,11 +46,14 @@ input[type=number] {
 }
 
 .parent-calendar-event {
-  width: 20rem;
+  width: 30rem;
   min-height: 22rem;
   border: 1px solid var(--darkBlue);
   margin: 0.5rem;
   padding: 1rem;
+}
+.parent-calendar-event .daytimeclass {
+  min-height: 5rem;
 }
 
 /*** index table with trainers' names & form with select ***/
