@@ -54,21 +54,4 @@ window.addEventListener('load', function () {
       }
     }
   }
-  const trmorning = document.querySelectorAll('.morning-class');
-  const trmidday = document.querySelectorAll('.midday-class');
-  const trevening = document.querySelectorAll('.evening-class');
-  const tr = document.querySelectorAll('.daytimeclass .parent-data');
-  for(let i=0; i<tr.length; i++){
-    if(tr[i].firstElementChild !== null){
-      if((tr[i].firstElementChild).firstChild !== null){
-        console.log((tr[i].firstElementChild).firstChild)
-      }else{
-        tr[i].parentElement.removeChild(tr[i])
-      }
-
-    }
-
-
-  }
-
 })

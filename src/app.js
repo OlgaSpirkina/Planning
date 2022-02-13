@@ -108,25 +108,6 @@ const createCalendarGroupedByMonths = (result) => {
     }
   }
 }
-// Handlebars helpers
-const morning = '11:00';
-const midday = '15:00';
-const evening = '17:00';
-hbs.registerHelper('morning', function(daytime) {
-  if(daytime < morning){
-    return daytime
-  }return
-})
-hbs.registerHelper('midday', function(daytime) {
-  if(daytime > morning && daytime < evening){
-    return daytime
-  }return
-})
-hbs.registerHelper('evening', function(daytime) {
-  if(daytime > evening){
-    return daytime
-  }return
-})
 //
 app.get('/', (req,res,next) => {
   let sql = 'SELECT name, fname, mobile FROM trainers ORDER BY fname'
@@ -301,14 +282,33 @@ app.get('/plannings/:id', (req,res,next) => {
         }
       })
       let groupedByMonth = groupBy(result, 'choose_months');
+
       let newGroupedByMonth = {}
       Object.values(groupedByMonth).forEach((item, index) => {
         for(let i=0; i<Object.keys(groupedByMonth).length; i++){
           if(i === index){
-            newGroupedByMonth[Object.keys(groupedByMonth)[i]] = groupBy(item, 'date')
+            newGroupedByMonth[Object.keys(groupedByMonth)[i]] = groupBy(item, 'date');
           }
         }
       })
+      // sort the classes by time from earliest to latest if there are few classes same day
+      const sortHours = (elem) => {
+        Object.values(elem).forEach((month) => {
+          Object.values(month).forEach((day) => {
+            if(day.length > 1){
+              day.sort((a, b) => a.time - b.time)
+            }
+          })
+        })
+      }
+      sortHours(newGroupedByMonth);
+      console.log(chalk.blue.bold(util.inspect(Object.values(Object.values(newGroupedByMonth)[1]))))
+      /*Object.values(Object.values(newGroupedByMonth)[0]).forEach((day) => {
+        if(day.length > 1){
+          day.sort((a, b) => a.time - b.time)
+        }
+      })
+      */
       for(let i=0; i<Object.keys(newObjectForAllMonths).length; i++){
         for(let j=0; j<Object.keys(newGroupedByMonth).length; j++){
           if(Object.keys(newObjectForAllMonths)[i] === Object.keys(newGroupedByMonth)[j]){
@@ -351,11 +351,9 @@ app.get('/plannings/:id', (req,res,next) => {
       })
 */
 
-      //let allTrainersPlanning = createCalendarGroupedByMonths(result)
       res.render('plannings', {
         result: result,
         objectForEachMonth: objectForEachMonth,
-        //cal: allTrainersPlanning,
         title: 'planning !',
         message: 'Les données ont été rajoutée. Merci et à la prochaine!',
         timeOfClass: startOfClasses,

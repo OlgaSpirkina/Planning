@@ -24,52 +24,21 @@
     <div class="row">
       <div class="col-12 d-flex flex-column">
         <h3 class="text-center">{{#each objectForEachMonth}}<span id="current-month">{{@key}}</span>{{/each}} {{currentYear}}</h3>
-<!--
-        <table>
-          <thead>
-            {{#each days}}
-            <th class="table-daysofweek-heading {{this}}">{{this}}</th>
-            {{/each}}
-          </thead>
-          <tbody>
-            <tr>
-            </tr>
-          </tbody>
-        </table>
--->
         <div class="d-flex flex-wrap justify-content-evenly align-items-center">
           {{#each objectForEachMonth}}
           {{#each this}}
           <div class="parent-calendar-event">
             <h5 class="formated-day">{{@key}}</h5>
               <div>
-                <div style="border: 1px solid pink; margin: .5rem" class="daytimeclass morning-class">
+                <div style="border: 1px solid brown; margin: .5rem">
                   {{#each this}}
-                  <div class="d-flex parent-data">
-                  <p>{{morning this.time}}</p>
+                  <div class="d-flex justify-content-between align-items-center parent-data">
+                  <p>{{this.time}}</p>
                   <p>{{this.name}} {{this.fname}}</p>
                   <p>{{this.company}}</p>
                   <p>{{this.total_classes}}</p>
-                  </div>
-                  {{/each}}
-                </div>
-                <div style="border: 1px solid grey; margin: .5rem" class="daytimeclass midday-class">
-                  {{#each this}}
-                  <div class="d-flex parent-data">
-                  <p>{{midday this.time}}</p>
-                  <p>{{this.name}} {{this.fname}}</p>
-                  <p>{{this.company}}</p>
-                  <p>{{this.total_classes}}</p>
-                  </div>
-                  {{/each}}
-                </div>
-                <div style="border: 1px solid brown; margin: .5rem" class="daytimeclass evening-class">
-                  {{#each this}}
-                  <div class="d-flex parent-data">
-                  <p>{{evening this.time}}</p>
-                  <p>{{this.name}} {{this.fname}}</p>
-                  <p>{{this.company}}</p>
-                  <p>{{this.total_classes}}</p>
+                  <p hidden>{{this.trainer_id}}</p>
+                  <button class="change-trainers-planning" value="{{this.trainer_id}}"><a href="updateplanning/{{this.fname}}{{this.name}}">modifier<a/></button>
                   </div>
                   {{/each}}
                 </div>
