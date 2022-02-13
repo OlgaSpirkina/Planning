@@ -408,7 +408,7 @@ app.post('/planning', (req,res,next) => {
     if(err) throw err;
     console.log(chalk.cyan.bold('Data added successfully into schedule!'))
     req.flash('success', 'Data added successfully into schedule!')
-    res.redirect('/planning')
+    res.redirect('back')
   })
 })
 app.post('/', (req,res,next) => {
@@ -427,18 +427,54 @@ app.post('/', (req,res,next) => {
   })
 })
 app.post('/entreprises', (req,res,next) => {
-  let company, company_adress, contact_name, contact_info, sql;
-  company = req.body.company;
-  company_adress = req.body.company_adress;
-  contact_name = req.body.contact_name;
-  contact_info = req.body.contact_info;
-  sql = `INSERT INTO companies (company, company_adress, contact_name, contact_info) VALUES ("${company}", "${company_adress}", "${contact_name}", "${contact_info}")`;
-  conn.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log(chalk.cyan.bold('company info inserted'))
-    req.flash('success', 'Company info added successfully!')
-    res.redirect('/entreprises')
-  })
+  console.log(chalk.yellow.bold(util.inspect(req.body)))
+  if(req.body.idput){
+    const companyUpdateId = req.body.idput;
+    console.log(chalk.bold.red("update"))
+    let companyput, company_adressput, contact_nameput, contact_infoput, sql;
+    companyput = req.body.companyput;
+    company_adressput = req.body.company_adressput;
+    contact_nameput = req.body.contact_nameput;
+    contact_infoput = req.body.contact_infoput;
+    sql = `UPDATE companies SET company = "${companyput}", company_adress = "${company_adressput}", contact_name = "${contact_nameput}", contact_info = "${contact_infoput}" WHERE id = ?`;
+    conn.query(sql, [companyUpdateId], function (err, result) {
+      if (err) throw err;
+      console.log(chalk.cyan.bold('company info updated'))
+      req.flash('success', 'Company info updated successfully!')
+      res.redirect('/entreprises')
+    })
+  }else{
+    let company, company_adress, contact_name, contact_info, sql;
+    company = req.body.company;
+    company_adress = req.body.company_adress;
+    contact_name = req.body.contact_name;
+    contact_info = req.body.contact_info;
+    sql = `INSERT INTO companies (company, company_adress, contact_name, contact_info) VALUES ("${company}", "${company_adress}", "${contact_name}", "${contact_info}")`;
+    conn.query(sql, function (err, result) {
+      if (err) throw err;
+      console.log(chalk.cyan.bold('company info inserted'))
+      req.flash('success', 'Company info added successfully!')
+      res.redirect('/entreprises')
+    })
+  }
+})
+app.get('/delete/:id', (req,res,next) => {
+  const id= req.params.id;
+  const sql = 'DELETE FROM companies WHERE id = ?';
+  conn.query(sql, [id], function (err, data) {
+  if (err) throw err;
+  console.log(chalk.bold.green.bgWhite("company was deleted"));
+});
+res.redirect('/entreprises');
+})
+app.get('/deleteclass/:id', (req,res,next) => {
+  const id= req.params.id;
+  const sql = 'DELETE FROM schedule WHERE id = ?';
+  conn.query(sql, [id], function (err, data) {
+  if (err) throw err;
+  console.log(chalk.bold.green.bgWhite("class was deleted"));
+});
+res.redirect('back');
 })
 /*
 app.use(function(req,res,next){

@@ -26,6 +26,12 @@
   text-align: left;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 select:focus,
 textarea:focus,
 button:focus,
@@ -125,7 +131,9 @@ form fieldset .p-in-form input {
 form fieldset .p-in-form .clear-form {
   width: 7rem;
   padding: 0.7rem;
+  margin: 0 auto;
   margin-top: 2rem;
+  border: none;
   border-radius: 0.5rem;
   background-color: var(--theYellow);
   color: #fff;
@@ -163,13 +171,15 @@ form fieldset .p-in-form .clear-form:hover {
   background-color: var(--lightGrey);
 }
 .trainers-planning button {
-  margin: 1rem 0;
-  width: 10rem;
+  width: 7rem;
   padding: 0.7rem;
+  margin: 0 auto;
+  margin-top: 2rem;
   border: none;
   border-radius: 0.5rem;
   background-color: var(--theYellow);
   color: #fff;
+  width: 10rem;
 }
 .trainers-planning button:hover {
   background-color: #fff;
@@ -237,20 +247,6 @@ form fieldset .p-in-form .clear-form:hover {
 #update-the-company fieldset input[name=idput] {
   pointer-events: none;
   filter: brightness(1.75);
-}
-#update-the-company fieldset input[type=submit] {
-  width: 7rem;
-  padding: 0.7rem;
-  margin: 1rem 0;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: var(--theYellow);
-  color: #fff;
-  cursor: pointer;
-}
-#update-the-company fieldset input[type=submit]:hover {
-  background-color: #fff;
-  color: var(--darkBlue);
 }
 #update-the-company fieldset p {
   display: flex;
@@ -350,17 +346,19 @@ form fieldset .p-in-form .clear-form:hover {
   background-color: var(--theYellow);
   pointer-events: none;
 }
-#trainers-planning-form input[type=submit] {
+
+input[type=submit] {
   width: 7rem;
   padding: 0.7rem;
-  margin: 1rem 0;
+  margin: 0 auto;
+  margin-top: 2rem;
   border: none;
   border-radius: 0.5rem;
   background-color: var(--theYellow);
   color: #fff;
-  cursor: pointer;
+  margin: 1rem;
 }
-#trainers-planning-form input[type=submit]:hover {
+input[type=submit]:hover {
   background-color: #fff;
   color: var(--darkBlue);
 }
