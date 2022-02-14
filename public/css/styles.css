@@ -6,6 +6,7 @@
   --darkGrey: #26252d;
   --mainReddish: #CF0034;
   --lightGrey: #A79B8D;
+  --veryLightGrey: #f5f5f5;
   --theYellow: #f19711;
   --mainfontColor: #212529;
   --mainfont: "Open Sans", Arial, Helvetica, sans-serif;
@@ -51,17 +52,6 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.parent-calendar-event {
-  width: 30rem;
-  min-height: 22rem;
-  border: 1px solid var(--darkBlue);
-  margin: 0.5rem;
-  padding: 1rem;
-}
-.parent-calendar-event .daytimeclass {
-  min-height: 5rem;
-}
-
 /*** index table with trainers' names & form with select ***/
 .list-of-trainers {
   width: 45vw;
@@ -81,6 +71,13 @@ input[type=number] {
 }
 .list-of-trainers table tr {
   cursor: pointer;
+}
+.list-of-trainers table tr td:nth-child(4n) {
+  text-align: center;
+}
+.list-of-trainers table tr td:nth-child(4n) button {
+  background-color: var(--veryLightGrey);
+  border-radius: 0.1rem;
 }
 .list-of-trainers table tbody tr:hover {
   background-color: var(--theYellow);
@@ -270,6 +267,36 @@ form fieldset .p-in-form .clear-form:hover {
 }
 
 /*** Planning and Monthly planning page ***/
+.parent-calendar-event {
+  width: 30%;
+  min-height: 22rem;
+  border: 1px solid var(--darkBlue);
+  margin: 0.5rem;
+  padding: 1rem;
+}
+.parent-calendar-event .formated-day {
+  color: var(--darkBlue);
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.parent-calendar-event .table-in-planning {
+  width: 100%;
+  margin-top: 2rem;
+}
+.parent-calendar-event .table-in-planning thead {
+  border-bottom: 1px solid var(--veryLightGrey);
+}
+.parent-calendar-event .table-in-planning tbody button {
+  border: none;
+  border-radius: 0.2rem;
+  background-color: var(--darkBlue);
+  color: #fff;
+}
+.parent-calendar-event .table-in-planning tr {
+  height: 2rem;
+  text-align: center;
+}
+
 .month-btn {
   width: 8rem;
   border: none;
@@ -296,55 +323,105 @@ form fieldset .p-in-form .clear-form:hover {
   width: 100%;
 }
 #trainers-planning-form fieldset {
-  padding: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem 0;
+  border: none;
+}
+#trainers-planning-form fieldset legend {
+  margin: 1rem;
+  font-size: 3rem;
+  line-height: 4.25rem;
+  font-weight: 800;
 }
 #trainers-planning-form fieldset p {
+  width: 20vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-#trainers-planning-form fieldset p:nth-of-type(-n+3) {
-  width: 33%;
-}
-#trainers-planning-form fieldset p:nth-child(n+4):nth-child(-n+8) {
-  width: 25%;
-  text-align: center;
-}
-#trainers-planning-form fieldset p:nth-child(9n), #trainers-planning-form fieldset p:last-of-type {
-  width: 100%;
-}
-#trainers-planning-form fieldset p:nth-child(9n) {
-  margin: 1rem 0;
-  padding: 0.5rem 0;
-  input-height: 2rem;
-  input-text-align: center;
 }
 #trainers-planning-form fieldset p:nth-child(n+10):nth-child(-n+14) input {
-  width: 6rem;
-  padding: 1rem;
-  margin-top: 0.5rem;
-  border: none;
-  border-radius: 0.3rem;
-  text-align: center;
   font-size: 2rem;
   font-weight: bold;
 }
 #trainers-planning-form fieldset p:nth-child(n+10):nth-child(-n+14) input[name=total_classes] {
   color: var(--theYellow);
 }
-#trainers-planning-form input {
-  background-color: var(--darkBlue);
-  color: #fff;
+#trainers-planning-form fieldset p input, #trainers-planning-form fieldset p select {
+  height: 2.7rem;
+  margin-top: 0.5rem;
   border: none;
-  padding: 0.5rem;
+  background-color: var(--darkBlue);
 }
-#trainers-planning-form input[name=trainer_id],
-#trainers-planning-form input[name=name],
-#trainers-planning-form input[name=fname] {
+#trainers-planning-form fieldset p input[name=trainer_id],
+#trainers-planning-form fieldset p input[name=name],
+#trainers-planning-form fieldset p input[name=fname] {
   background-color: var(--theYellow);
   pointer-events: none;
+}
+#trainers-planning-form fieldset p select {
+  background-color: var(--darkBlue);
+}
+#trainers-planning-form fieldset #submit-new-class input {
+  width: 7rem;
+  padding: 0.7rem;
+  margin: 0 auto;
+  margin-top: 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--theYellow);
+  color: #fff;
+  margin-bottom: 0;
+  margin-top: 2rem;
+}
+#trainers-planning-form fieldset #submit-new-class input:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
+}
+
+.intrainersplanning {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 1rem;
+}
+.intrainersplanning button {
+  margin: 0;
+}
+
+.count-classes {
+  min-height: 15rem;
+}
+
+#parent-perso-info {
+  background-color: var(--blueBarckground);
+}
+
+#perso-info {
+  width: 80%;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  color: #fff;
+  line-height: 1.7;
+  font-size: 1.2rem;
+}
+
+#btn-perso-info {
+  width: 7rem;
+  padding: 0.7rem;
+  margin: 0 auto;
+  margin-top: 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--theYellow);
+  color: #fff;
+  width: 15rem;
+}
+#btn-perso-info:hover {
+  background-color: #fff;
+  color: var(--darkBlue);
 }
 
 input[type=submit] {

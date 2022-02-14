@@ -22,7 +22,6 @@
 </head>
 <body class="body">
   {{>header}}
-
   <section class="container-fluid">
     <div class="row">
       <div class="col-12 d-flex flex-column">
@@ -32,19 +31,27 @@
           {{#each this}}
           <div class="parent-calendar-event">
             <h5 class="formated-day">{{@key}}</h5>
-              <div>
-                <div style="border: 1px solid brown; margin: .5rem">
+              <table class="table-in-planning">
+                <thead>
+                  <tr>
+                    <th>début</th>
+                    <th>professeur</th>
+                    <th>entreprise</th>
+                    <th>heurs total</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {{#each this}}
-                  <div class="delete-class-info d-flex justify-content-between align-items-center parent-data">
-                  <p>{{this.time}}</p>
-                  <p><a href="/trainer/{{this.name}}{{this.fname}}">{{this.name}} {{this.fname}}</a></p>
-                  <p>{{this.company}}</p>
-                  <p>{{this.total_classes}}</p>
-                  <button class="btn-delete-class" type="button" data-toggle="modal" data-target="#myModal" value="{{this.id}}">supprimer</button>
-                  </div>
+                    <tr>
+                      <td>{{this.time}}</td>
+                      <td><a href="/trainer/{{this.name}}{{this.fname}}">{{this.name}} {{this.fname}}</a></td>
+                      <td>{{this.company}}</td>
+                      <td>{{this.total_classes}}</td>
+                      <td><button class="btn-delete-class" type="button" data-toggle="modal" data-target="#myModal" value="{{this.id}}">supprimer</button></td>
+                    </tr>
                   {{/each}}
-                </div>
-              </div>
+                </tbody>
+              </table>
           </div>
           {{/each}}
           {{/each}}

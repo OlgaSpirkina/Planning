@@ -16,8 +16,20 @@
 </head>
 <body class="body">
   {{>header}}
+  <p id="add-planning">Créez des nouveaux horaires</p>
   <section>
-    <p>Créez des nouveaux horaires</p>
+    <div class="trainers-planning intrainersplanning">
+      <label for="choose_trainer">Choisissez le nom du professeur</label>
+      <select name="choose_trainer" id="choose-trainer">
+        <option selected>Nom de professeur</option>
+        {{#each listOfAllTrainers}}
+        <option value="{{this.name}} {{this.fname}}">{{this.name}} {{this.fname}}</option>
+        {{/each}}
+      </select>
+      <button type="button"><a id="anchor-in-createplanning">Créer le planning</a></button>
+    </div>
+  </section>
+  <section>
     <form id="trainers-planning-form" action="/planning" method="POST">
      <fieldset>
        <legend>Planning de {{result.[0].name}} {{result.[0].fname}}</legend>
@@ -33,8 +45,8 @@
          <label for="fname">Nom de famille:</label>
          <input type="text" value="{{result.[0].fname}}" id="fname" name="fname">
        </p>
-       <p class="d-flex">
-         <label for="choose_months">Mois: </laber>
+       <p>
+         <label for="choose_months">Mois: </label>
          <select name="choose_months" id="choose-months">
            <option selected="selected">{{currentMonth}}</option>
            {{#each months}}
@@ -42,13 +54,15 @@
            {{/each}}
          </select>
        </p>
-       <p class="d-flex">
+       <p>
          <label for="choose_years">Année: </label>
          <select name="choose_years" id="choose-years">
-           <option selected="selected">{{currentYear}}</option>
+           <option name="current_year" selected="selected">{{currentYear}}</option>
+<!--
            {{#each years}}
            <option value="{{this}}">{{this}}</option>
            {{/each}}
+-->
          </select>
        </p>
        <p>
@@ -88,11 +102,12 @@
          <label for="total_classes">Nombre total d'heurs par intervention:</label>
          <input type="number" id="total_classes" name="total_classes" required>
        </p>
-       <p>
-         <input type="submit submit-btn" value="Submit">
+       <p id="submit-new-class">
+         <input type="submit" value="Ajouter">
        </p>
      </fieldset>
     </form>
   </section>
+  {{>footer}}
 </body>
 </html>

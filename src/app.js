@@ -77,6 +77,11 @@ const years = [
   2024,
   2025
 ]
+// Handlebars helpers
+hbs.registerHelper("substringOfDate", function(mydate) {
+    return mydate.substring(0, 16);
+});
+// End hbs helpers
 // Create the Calendar
 const createThePlanning = (planningByMonth, resultFromDb) => {
   let objectForEachMonth = {}
@@ -194,7 +199,7 @@ const createCalendarGroupedByMonths = (result) => {
 }
 //
 app.get('/', (req,res,next) => {
-  let sql = 'SELECT name, fname, mobile FROM trainers ORDER BY fname'
+  let sql = 'SELECT * FROM trainers ORDER BY fname'
   conn.query(sql, function(err, result){
     if(err) throw err;
     req.flash('success', 'Data added successfully!')
@@ -212,7 +217,7 @@ app.get('/trainer/:id', (req,res,next) => {
     if (err) throw err;
     else{
       let trainerPersoPlanning = groupBy(result, 'choose_months');
-      let email, mobile;
+      let email, mobile, trainerid;
       let countClasses = []
       let objByMonth = {}
       let objForAllClasses = {}
@@ -230,6 +235,7 @@ app.get('/trainer/:id', (req,res,next) => {
 
               email = Object.values(Object.values(trainerPersoPlanning)[i])[y].email
               mobile = Object.values(Object.values(trainerPersoPlanning)[i])[y].mobile
+              trainerid = Object.values(Object.values(trainerPersoPlanning)[i])[y].trainer_id
               Object.keys(objByMonth).forEach((month) => {
                 if(Object.values(Object.values(trainerPersoPlanning)[i])[y].choose_months === month){
                   if(Object.values(Object.values(trainerPersoPlanning)[i])[y].yoga) countYoga += parseInt(Object.values(Object.values(trainerPersoPlanning)[i])[y].yoga, 10);
@@ -301,6 +307,7 @@ app.get('/trainer/:id', (req,res,next) => {
         result: trainerPersoPlanning,
         email: email,
         mobile: mobile,
+        trainerid: trainerid,
         allClasses: objByMonth,
         allSalaries: salaryByMonth
       })
@@ -318,10 +325,11 @@ app.get('/trainersplanning/:id', (req,res,next) => {
   let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(today)
   formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
   let trainerId = req.params.id
-  conn.query('SELECT * FROM trainers t WHERE t.username = ?; SELECT company FROM companies ORDER BY company', [trainerId, 1, 2], function(err, result){
+  conn.query('SELECT * FROM trainers t WHERE t.username = ?; SELECT company FROM companies ORDER BY company; SELECT * FROM trainers', [trainerId, 1, 2, 3], function(err, result){
     if (err) throw err;
     else{
       let company = result[1]
+      let listOfAllTrainers = result[2]
       console.log(chalk.cyan.bold(util.inspect(formatedMonth)))
       res.render('trainersplanning', {
         title: trainerId,
@@ -330,7 +338,8 @@ app.get('/trainersplanning/:id', (req,res,next) => {
         months: months,
         years: years,
         currentMonth: formatedMonth,
-        currentYear: currentYear
+        currentYear: currentYear,
+        listOfAllTrainers: listOfAllTrainers
       })
     }
   })
@@ -470,9 +479,18 @@ app.get('/deleteclass/:id', (req,res,next) => {
   const id= req.params.id;
   const sql = 'DELETE FROM schedule WHERE id = ?';
   conn.query(sql, [id], function (err, data) {
-  if (err) throw err;
-  console.log(chalk.bold.green.bgWhite("class was deleted"));
-});
+    if (err) throw err;
+    console.log(chalk.bold.green.bgWhite("class was deleted"));
+  });
+  res.redirect('back');
+})
+app.get('/deletetrainerdata/:id', (req,res,next) => {
+  const id= req.params.id;
+  const sql = 'DELETE FROM trainers WHERE id = ?';
+  conn.query(sql, [id], function (err, data) {
+    if (err) throw err;
+    console.log(chalk.bold.cyan.bgWhite("trainers personal info was deleted"));
+  });
 res.redirect('back');
 })
 /*

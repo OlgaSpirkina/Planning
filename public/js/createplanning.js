@@ -23,6 +23,22 @@ window.addEventListener('load', function () {
         countClasses += parseInt(everyClass[i].value, 10);
         totalClasses.value = countClasses;
     })
-
   }
+  // Alert appears when submit new planning
+  document.getElementById('submit-new-class').addEventListener('click', function(){
+      (document.getElementById('add-planning').innerHTML ="Créez des nouveaux horaires")
+        ?
+      (document.getElementById('add-planning').innerHTML = "Les horaires ont été ajoutées. Consultez l'onglet Planning ou rajoutez de nouveaux horaires.")
+        :
+      (document.getElementById('add-planning').innerHTML ="Créez des nouveaux horaires");
+  })
+  // Redirect to the pre-filled page for each trainer
+  const anchorInCreatPlanning = document.getElementById('anchor-in-createplanning');
+  let createPlanning = document.getElementById('create-planning');
+  const chooseTrainer = document.getElementById('choose-trainer');
+  chooseTrainer.addEventListener("change", function() {
+    let trainer = chooseTrainer.options[chooseTrainer.selectedIndex].value;
+    trainer = trainer.replace(/\s/g, '');
+    anchorInCreatPlanning.setAttribute('href', `/trainersplanning/${trainer}`);
+  });
 })
