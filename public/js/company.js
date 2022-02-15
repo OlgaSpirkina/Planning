@@ -43,8 +43,9 @@ window.addEventListener('load', function () {
           const submitInput = document.createElement('input');
           submitInput.setAttribute('type', 'submit');
           submitInput.setAttribute('value', 'Modifier');
-          legend.appendChild(legendText);
           legend.appendChild(iconClose);
+          legend.appendChild(legendText);
+
           fieldset.appendChild(legend);
           fieldset.appendChild(company_id);
           fieldset.appendChild(company);

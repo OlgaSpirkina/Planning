@@ -217,7 +217,7 @@ app.get('/trainer/:id', (req,res,next) => {
     if (err) throw err;
     else{
       let trainerPersoPlanning = groupBy(result, 'choose_months');
-      let email, mobile, trainerid;
+      let email, mobile, trainerid, name, fname;
       let countClasses = []
       let objByMonth = {}
       let objForAllClasses = {}
@@ -232,7 +232,8 @@ app.get('/trainer/:id', (req,res,next) => {
           if(i === j){
             objByMonth[Object.keys(trainerPersoPlanning)[j]] = objForAllClasses
             for(let y=0; y<Object.values(Object.values(trainerPersoPlanning)[i]).length; y++){
-
+              name = Object.values(Object.values(trainerPersoPlanning)[i])[y].name
+              fname = Object.values(Object.values(trainerPersoPlanning)[i])[y].fname
               email = Object.values(Object.values(trainerPersoPlanning)[i])[y].email
               mobile = Object.values(Object.values(trainerPersoPlanning)[i])[y].mobile
               trainerid = Object.values(Object.values(trainerPersoPlanning)[i])[y].trainer_id
@@ -307,6 +308,8 @@ app.get('/trainer/:id', (req,res,next) => {
         result: trainerPersoPlanning,
         email: email,
         mobile: mobile,
+        name: name,
+        fname: fname,
         trainerid: trainerid,
         allClasses: objByMonth,
         allSalaries: salaryByMonth
@@ -432,6 +435,22 @@ app.post('/', (req,res,next) => {
     console.log(chalk.cyan.bold('trainer info inserted'))
     req.flash('success', 'Trainer info added successfully!')
     res.redirect('/')
+  })
+})
+app.post('/trainer/:id', (req,res,next) => {
+  let idput, nameput, fnameput, usernameput, emailput, mobileput, sqlput;
+  idput = req.body.idput;
+  nameput = req.body.nameput;
+  fnameput = req.body.fnameput;
+  usernameput = req.body.usernameput;
+  emailput = req.body.emailput;
+  mobileput = req.body.mobileput;
+  sqlput = `UPDATE trainers t1, schedule t2 SET t2.name = "${nameput}", t2.fname = "${fnameput}", t1.name = "${nameput}", t1.fname = "${fnameput}", t1.username = "${usernameput}", t1.email = "${emailput}", t1.mobile = "${mobileput}" WHERE t1.id = t2.trainer_id and t1.id = ?`;
+  conn.query(sqlput, [idput], function(err, result){
+    if(err) throw err;
+    console.log(chalk.yellow.bold('trainer info updated'))
+    req.flash('success', 'Trainer info updated successfully!')
+    res.redirect(`/trainer/${usernameput}`)
   })
 })
 app.post('/entreprises', (req,res,next) => {

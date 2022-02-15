@@ -20,11 +20,15 @@
   {{>header}}
   <section class="container-fluid">
     <div class="row">
-      <div id="parent-perso-info" class="col-12 d-flex justify-content-between align-items-start">
+      <div id="form-update-perso-info"></div>
+      <div id="parent-perso-info" class="col-12">
         <div id="perso-info" >
           <h1>{{title}}</h1>
-          <p>address mail: <b>{{email}}</b></p>
-          <p>numéro de téléphone: <b>{{mobile}}</b></p>
+          <span hidden id="name-put">{{name}}</span>
+          <span hidden id="fname-put">{{fname}}</span>
+          <p>address mail: <span id="email-put">{{email}}</span></p>
+          <p>numéro de téléphone: <span id="mobile-put">{{mobile}}</span></p>
+          <p id="username-put" hidden>{{title}}</p>
         </div>
         <button id="btn-perso-info" value="{{trainerid}}" type="button">Modifier les informations</button>
       </div>
