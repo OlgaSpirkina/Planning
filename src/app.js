@@ -333,7 +333,6 @@ app.get('/trainersplanning/:id', (req,res,next) => {
     else{
       let company = result[1]
       let listOfAllTrainers = result[2]
-      console.log(chalk.cyan.bold(util.inspect(formatedMonth)))
       res.render('trainersplanning', {
         title: trainerId,
         result: result[0],
@@ -392,7 +391,45 @@ app.get('/company-details/:id', (req,res,next) => {
     if (err) throw err;
     else{
       let groupedByUsername = groupBy(result, 'username')
-      console.log(chalk.cyan.bold(util.inspect(result)))
+      let groupedByMonths = groupBy(result, 'choose_months')
+      /*
+
+      let objForClass = {
+        "class": [],
+        "time": '',
+        "trainer": ''
+      }
+      for(let day in groupedByMonths){
+        groupedByMonths[day] = groupBy(groupedByMonths[day], 'date')
+        for(const classes in groupedByMonths[day]){
+          groupedByMonths[day][classes] = groupedByMonths[day][classes].map(function(item){
+            objForClass.class = [{"yoga": item.yoga}, {"pilates": item.pilates}];
+            objForClass.time = item.time;
+            objForClass.trainer = item.name +  ' ' + item.fname;
+            day = objForClass;
+            objForClass = {
+              "class": [],
+              "time": '',
+              "trainer": ''
+            }
+            return day
+          })
+
+        }
+
+      }
+
+      for(const key in groupedByMonths){
+
+        for(const seckey in groupedByMonths[key]){
+          groupedByMonths[key][seckey].forEach((item) => {
+
+          })
+
+        }
+      }
+      */
+      console.log(chalk.yellow.bold(util.inspect(groupedByMonths)))
       res.render('company-details', {
         result: groupedByUsername
       })

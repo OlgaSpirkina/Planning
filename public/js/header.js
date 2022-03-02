@@ -1,5 +1,6 @@
 window.addEventListener('load', function () {
   const linksInHeader = document.querySelectorAll('.link-in-header');
+  const imgLogo = document.getElementById('img-logo');
   for(let i=0; i<linksInHeader.length; i++){
     if(linksInHeader[i].href === window.location.href){
       linksInHeader[i].style.color = "#f19711";
@@ -12,4 +13,5 @@ window.addEventListener('load', function () {
       }, false);
     }
   }
+  imgLogo.setAttribute('src', 'img/logo.png')
 })
