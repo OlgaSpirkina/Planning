@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <!-- JS -->
-  <script src="/js/main.js" type="text/javascript" defer></script>
+  <script src="/js/header.js" type="text/javascript" defer></script>
+  <script src="/js/company-details.js" type="text/javascript" defer></script>
   <title>Company details</title>
 </head>
 <body class="body">
@@ -27,6 +28,29 @@
     {{#each result}}
       <p>{{@key}}</p>
     {{/each}}
+  </section>
+  <section class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div id="company-calendar" class="d-flex flex-wrap">
+          {{#each companyCalendar}}
+          <div class="d-flex flex-column justify-content-center align-items-center">
+          <h3>{{@key}}</h3>
+            <div class="company-each-month d-flex flex-wrap justify-content-evenly align-items-center">
+                {{#each this}}
+                <div class="days">
+                  <p>{{@key}}</p>
+                  {{#each this}}
+                  <p>{{this.time}}</p>
+                  {{/each}}
+                </div>
+                {{/each}}
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
   </section>
   {{>footer}}
 </body>

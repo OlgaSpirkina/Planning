@@ -507,4 +507,22 @@ form fieldset .p-in-form .clear-form:hover {
   color: var(--darkBlue);
 }
 
+/*** Company details page ***/
+#company-calendar {
+  width: 90%;
+  margin: 0 auto;
+}
+#company-calendar .company-each-month {
+  width: 85%;
+  margin: 0 auto;
+  border: 1px solid yellow;
+}
+#company-calendar .company-each-month .days {
+  width: 15rem;
+  height: 7rem;
+  border: 1px solid grey;
+  margin: 0.5rem;
+  padding: 0.2rem;
+}
+
 /*# sourceMappingURL=styles.css.map */

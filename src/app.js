@@ -392,46 +392,55 @@ app.get('/company-details/:id', (req,res,next) => {
     else{
       let groupedByUsername = groupBy(result, 'username')
       let groupedByMonths = groupBy(result, 'choose_months')
-      /*
-
-      let objForClass = {
-        "class": [],
-        "time": '',
-        "trainer": ''
+      let companyCalendarMonths = {}
+      for(let i=0; i<=11; i++){
+        for(let j=0; j<months.length; j++){
+          if(i === j){
+            let countDaysInMonth = 32 - new Date(2022, i, 32).getDate();
+            companyCalendarMonths[months[j]] = countDaysInMonth;
+            countDaysInMonth = 0
+          }
+        }
       }
-      for(let day in groupedByMonths){
-        groupedByMonths[day] = groupBy(groupedByMonths[day], 'date')
-        for(const classes in groupedByMonths[day]){
-          groupedByMonths[day][classes] = groupedByMonths[day][classes].map(function(item){
-            objForClass.class = [{"yoga": item.yoga}, {"pilates": item.pilates}];
-            objForClass.time = item.time;
-            objForClass.trainer = item.name +  ' ' + item.fname;
-            day = objForClass;
-            objForClass = {
-              "class": [],
-              "time": '',
-              "trainer": ''
+      let companyMonth = {};
+      let companyCalendar = {}
+      Object.values(companyCalendarMonths).forEach((item, index) => {
+        for(let j=0; j<Object.keys(companyCalendarMonths).length; j++){
+          if(index === j){
+            for(let i=1; i<=item; i++){
+              let theDate = new Date(2022, j, i).toLocaleString();
+              companyMonth[theDate] = []
             }
-            return day
-          })
-
+            companyCalendar[Object.keys(companyCalendarMonths)[j]] = companyMonth
+            companyMonth = {}
+          }
         }
-
+      })
+      // Modify the date format toLocaleString()
+      for(const companyMonth in groupedByMonths){
+        groupedByMonths[companyMonth] = groupedByMonths[companyMonth].map(function(item){
+          item.date = item.date.toLocaleString()
+          return item
+        })
       }
-
-      for(const key in groupedByMonths){
-
-        for(const seckey in groupedByMonths[key]){
-          groupedByMonths[key][seckey].forEach((item) => {
-
-          })
-
+      // Fill the companyCalendar empty calendar
+      for(const eachMonth in companyCalendar){
+        for(const dbMonth in groupedByMonths){
+          if(eachMonth === dbMonth){
+            for(let y=0; y<groupedByMonths[dbMonth].length; y++){
+              for(const day in companyCalendar[eachMonth]){
+                if(day.includes(groupedByMonths[dbMonth][y].date)){
+                  companyCalendar[eachMonth][day].push(groupedByMonths[dbMonth][y])
+                }
+              }
+            }
+          }
         }
       }
-      */
-      console.log(chalk.yellow.bold(util.inspect(groupedByMonths)))
+      console.log(chalk.yellow.bold(util.inspect(companyCalendar)))
       res.render('company-details', {
-        result: groupedByUsername
+        result: groupedByUsername,
+        companyCalendar: companyCalendar
       })
     }
   })

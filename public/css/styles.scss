@@ -448,3 +448,20 @@ form{
   @include submit-btn-style;
   width: 15rem;
 }
+/*** Company details page ***/
+#company-calendar{
+  width: 90%;
+  margin: 0 auto;
+  .company-each-month{
+    width: 85%;
+    margin: 0 auto;
+    border: 1px solid yellow;
+    .days{
+      width: 15rem;
+      height: 7rem;
+      border: 1px solid grey;
+      margin: .5rem;
+      padding: .2rem;
+    }
+  }
+}

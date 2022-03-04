@@ -13,5 +13,5 @@ window.addEventListener('load', function () {
       }, false);
     }
   }
-  imgLogo.setAttribute('src', 'img/logo.png')
+  imgLogo.setAttribute('src', 'https://raw.githubusercontent.com/OlgaSpirkina/Planning/main/public/img/logo.png')
 })
