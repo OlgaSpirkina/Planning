@@ -67,11 +67,14 @@
        </p>
        <p>
          <label for="company">Entreprise:</label>
-         <select name="company" id="company">
+         <select name="company" id="company-name">
            <option selected>Choisissez l'entreprise</option>
            {{#each company}}
-           <option value="{{this.company}}">{{this.company}}</option>
+           <option value="{{this.company_name}}">{{this.company_name}}</option>
            {{/each}}
+         </select>
+         <select name="company_site" id="site-name" hidden>
+           <option selected>Choisissez le site</option>
          </select>
        </p>
        <p>
@@ -109,5 +112,35 @@
     </form>
   </section>
   {{>footer}}
+  <script>
+  const arrForCompanyAndSites = [
+    {{#each arrForCompanyAndSites}}
+    {
+      "name": "{{this.name}}",
+      "sites": [{{#each this.sites}}"{{this}}", {{/each}}],
+    },
+    {{/each}}
+  ];
+  document.getElementById('company-name').addEventListener('change', function(){
+    document.getElementById('site-name').innerHTML = '';
+    document.getElementById('site-name').removeAttribute('hidden');
+    const defaultOption = document.createElement('option');
+    const defaultOptionText = document.createTextNode("Choisissez le site");
+    defaultOption.appendChild(defaultOptionText);
+    document.getElementById('site-name').appendChild(defaultOption);
+    for(let i=0; i<arrForCompanyAndSites.length; i++){
+      if(arrForCompanyAndSites[i].name === this.value){
+        arrForCompanyAndSites[i].sites.forEach((site)=>{
+          const option = document.createElement('option');
+          option.setAttribute('value', site);
+          const optionText = document.createTextNode(site);
+          option.appendChild(optionText);
+          document.getElementById('site-name').appendChild(option);
+        })
+      }
+    }
+  })
+  console.log(arrForCompanyAndSites)
+  </script>
 </body>
 </html>

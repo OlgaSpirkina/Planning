@@ -27,6 +27,20 @@
   {{>header}}
   <section class="container-fluid">
     <div class="row">
+      <div class="col-12">
+        <form action="/add-compay" method="POST" class="my-2">
+         <fieldset >
+           <legend>Ajouter une nouvelle entreprise</legend>
+           <p class="p-in-form">
+             <label for="company_name">Nom d'entreprise:</label>
+             <input type="text" id="company_name" name="company_name">
+           </p>
+           <p class="p-in-form">
+             <input class="clear-form submit-entreprise" type="submit" value="Ajouter">
+           </p>
+         </fieldset>
+        </form>
+      </div>
       <div class="col-12 d-flex justify-content-around align-items-start">
         <div class="list-of-trainers my-2">
           <h3>Liste des professeurs</h3>

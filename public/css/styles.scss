@@ -449,13 +449,60 @@ form{
   width: 15rem;
 }
 /*** Company details page ***/
+// Carousel
+.carousel{
+  overflow: hidden;
+  position: relative;
+}
+.carousel__container{
+  transition: transform 0.3s;
+  transform: translate3d(0,0,0);
+}
+.carousel__item{
+  float: left;
+}
+.carousel__container::after{
+  content: '';
+  clear: both;
+  display: table;
+}
+.carousel__next,
+.carousel__prev{
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fff url('right.svg') center center no-repeat;
+  background-color: red;
+  background-size: 20px;
+  border-radius:  50%;
+  top: 50%;
+  margin-top: -20px;
+  right: -20px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.carousel__prev{
+  background-image: url('left.svg');
+  right: auto;
+  left: -20px;
+}
+.carousel__next:hover,
+.carousel__prev:hover{
+  transform: scale(1.2);
+}
+.carousel__next-hidden,
+.carousel__prev-hidden{
+  opacity: 0;
+}
 #company-calendar{
-  width: 90%;
   margin: 0 auto;
-  .company-each-month{
-    width: 85%;
-    margin: 0 auto;
+  overflow-x: scroll;
+  .in-company-calendar{
     border: 1px solid yellow;
+    width: 300px;
+  }
+  .company-each-month{
+    margin: 0 auto;
     .days{
       width: 15rem;
       height: 7rem;

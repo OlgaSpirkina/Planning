@@ -129,7 +129,6 @@ const createThePlanning = (planningByMonth, resultFromDb) => {
     })
   }
   sortHours(newGroupedByMonth);
-
   for(let i=0; i<Object.keys(newObjectForAllMonths).length; i++){
     for(let j=0; j<Object.keys(newGroupedByMonth).length; j++){
       if(Object.keys(newObjectForAllMonths)[i] === Object.keys(newGroupedByMonth)[j]){
@@ -165,7 +164,6 @@ const createThePlanning = (planningByMonth, resultFromDb) => {
   return objectForEachMonth
 }
 // END CALENDAR
-
 // Format the time
 const formatedTime = (anArr) => {
   anArr.forEach((item) => {
@@ -328,10 +326,24 @@ app.get('/trainersplanning/:id', (req,res,next) => {
   let formatedMonth = new Intl.DateTimeFormat('fr-FR', options).format(today)
   formatedMonth = formatedMonth.charAt(0).toUpperCase() + formatedMonth.slice(1);
   let trainerId = req.params.id
-  conn.query('SELECT * FROM trainers t WHERE t.username = ?; SELECT company FROM companies ORDER BY company; SELECT * FROM trainers', [trainerId, 1, 2, 3], function(err, result){
+  conn.query('SELECT * FROM trainers t WHERE t.username = ?; SELECT * FROM entreprises e JOIN company_details c ON e.id = c.company_id ORDER BY e.company_name; SELECT * FROM trainers; SELECT DISTINCT company_name from entreprises ORDER BY company_name', [trainerId, 1, 2, 3, 4], function(err, result){
     if (err) throw err;
     else{
-      let company = result[1]
+      let company = result[3];
+      const groupedByCompany = groupBy(result[1], "company_name");
+      let companyAndSites = {};
+      let arrForSites = [];
+      let arrForCompanyAndSites = [];
+      for(const company in groupedByCompany){
+        companyAndSites.name = company;
+        groupedByCompany[company].forEach((item)=> {
+          arrForSites.push(item.site_name);
+        })
+        companyAndSites.sites = arrForSites;
+        arrForCompanyAndSites.push(companyAndSites);
+        arrForSites = [];
+        companyAndSites = {};
+      }
       let listOfAllTrainers = result[2]
       res.render('trainersplanning', {
         title: trainerId,
@@ -341,7 +353,8 @@ app.get('/trainersplanning/:id', (req,res,next) => {
         years: years,
         currentMonth: formatedMonth,
         currentYear: currentYear,
-        listOfAllTrainers: listOfAllTrainers
+        listOfAllTrainers: listOfAllTrainers,
+        arrForCompanyAndSites: arrForCompanyAndSites
       })
     }
   })
@@ -372,8 +385,23 @@ app.get('/plannings/:id', (req,res,next) => {
       })
     }
   })
-})
+});
 app.get('/entreprises', (req,res,next) => {
+  //test
+  conn.query('SELECT * FROM entreprises e JOIN company_details c ON e.id = c.company_id ORDER BY e.company_name; SELECT * FROM entreprises ORDER BY company_name', [1, 2], function(err, result){
+    if (err) throw err;
+    else{
+      const companyList = result[0];
+      const entreprise = result[1];
+      res.render('entreprises', {
+      result: companyList,
+      entreprise: entreprise
+    })
+  }
+
+
+  // END test
+/*
   let sql = 'SELECT * FROM companies ORDER BY company'
   conn.query(sql, function (err, result) {
     if (err) throw err;
@@ -382,14 +410,17 @@ app.get('/entreprises', (req,res,next) => {
         result: result
       })
     }
+    */
   })
 })
 app.get('/company-details/:id', (req,res,next) => {
   let companyId = req.params.id
-  let sql = 'SELECT * FROM companies c JOIN schedule s ON c.company = s.company JOIN trainers t ON t.id = s.trainer_id AND c.contact_info = ?';
+  let sql = 'SELECT * FROM entreprises e JOIN company_details c ON e.id = c.company_id JOIN schedule s ON c.site_name = s.company_site AND e.company_name = ?';
   conn.query(sql, [companyId], function (err, result) {
     if (err) throw err;
     else{
+      console.log(result.length)
+      /*
       let groupedByUsername = groupBy(result, 'username')
       let groupedByMonths = groupBy(result, 'choose_months')
       let companyCalendarMonths = {}
@@ -416,14 +447,18 @@ app.get('/company-details/:id', (req,res,next) => {
           }
         }
       })
+      */
       // Modify the date format toLocaleString()
+      /*
       for(const companyMonth in groupedByMonths){
         groupedByMonths[companyMonth] = groupedByMonths[companyMonth].map(function(item){
           item.date = item.date.toLocaleString()
           return item
         })
       }
+      */
       // Fill the companyCalendar empty calendar
+      /*
       for(const eachMonth in companyCalendar){
         for(const dbMonth in groupedByMonths){
           if(eachMonth === dbMonth){
@@ -437,22 +472,26 @@ app.get('/company-details/:id', (req,res,next) => {
           }
         }
       }
-      console.log(chalk.yellow.bold(util.inspect(companyCalendar)))
+      */
+      //console.log(chalk.yellow.bold(util.inspect(companyCalendar)))
       res.render('company-details', {
+        /*
         result: groupedByUsername,
         companyCalendar: companyCalendar
+        */
       })
     }
   })
 })
 app.post('/planning', (req,res,next) => {
-  let name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, video, other_classes, total_classes, sqlClass;
+  let name, fname, trainer_id, choose_months, choose_years, company, company_site, date, time, yoga, pilates, video, other_classes, total_classes, sqlClass;
   name = req.body.name;
   fname = req.body.fname;
   trainer_id = req.body.trainer_id;
   choose_months = req.body.choose_months;
   choose_years = req.body.choose_years;
   company = req.body.company;
+  company_site = req.body.company_site;
   date = req.body.date;
   time = req.body.time,
   yoga = req.body.yoga;
@@ -460,7 +499,7 @@ app.post('/planning', (req,res,next) => {
   video = req.body.video;
   other_classes = req.body.other_classes;
   total_classes = req.body.total_classes;
-  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, choose_months, choose_years, company, date, time, yoga, pilates, video, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${choose_months}", "${choose_years}", "${company}", "${date}", "${time}", "${yoga}","${pilates}", "${video}", "${other_classes}", "${total_classes}")`;
+  sqlClass = `INSERT INTO schedule (name, fname, trainer_id, choose_months, choose_years, company, company_site, date, time, yoga, pilates, video, other_classes, total_classes) VALUES ("${name}", "${fname}", "${trainer_id}", "${choose_months}", "${choose_years}", "${company}", "${company_site}", "${date}", "${time}", "${yoga}","${pilates}", "${video}", "${other_classes}", "${total_classes}")`;
   conn.query(sqlClass, function(err, result){
     if(err) throw err;
     console.log(chalk.cyan.bold('Data added successfully into schedule!'))
@@ -504,12 +543,13 @@ app.post('/entreprises', (req,res,next) => {
   if(req.body.idput){
     const companyUpdateId = req.body.idput;
     console.log(chalk.bold.red("update"))
-    let companyput, company_adressput, contact_nameput, contact_infoput, sql;
-    companyput = req.body.companyput;
+    let site_nameput, company_adressput, contact_nameput, company_emailput, company_phone_numberput, sql;
+    site_nameput = req.body.site_nameput;
     company_adressput = req.body.company_adressput;
     contact_nameput = req.body.contact_nameput;
-    contact_infoput = req.body.contact_infoput;
-    sql = `UPDATE companies SET company = "${companyput}", company_adress = "${company_adressput}", contact_name = "${contact_nameput}", contact_info = "${contact_infoput}" WHERE id = ?`;
+    company_emailput = req.body.company_emailput;
+    company_phone_numberput = req.body.company_phone_numberput;
+    sql = `UPDATE company_details SET site_name = "${site_nameput}", company_adress = "${company_adressput}", contact_name = "${contact_nameput}", company_email = "${company_emailput}", company_phone_number="${company_phone_numberput}" WHERE id = ?`;
     conn.query(sql, [companyUpdateId], function (err, result) {
       if (err) throw err;
       console.log(chalk.cyan.bold('company info updated'))
@@ -517,12 +557,14 @@ app.post('/entreprises', (req,res,next) => {
       res.redirect('/entreprises')
     })
   }else{
-    let company, company_adress, contact_name, contact_info, sql;
-    company = req.body.company;
+    let company_id, site_name, company_adress, contact_name, company_email, company_phone_number, sql;
+    company_id = req.body.company_id;
+    site_name = req.body.site_name;
     company_adress = req.body.company_adress;
     contact_name = req.body.contact_name;
-    contact_info = req.body.contact_info;
-    sql = `INSERT INTO companies (company, company_adress, contact_name, contact_info) VALUES ("${company}", "${company_adress}", "${contact_name}", "${contact_info}")`;
+    company_email = req.body.company_email;
+    company_phone_number = req.body.company_phone_number;
+    sql = `INSERT INTO company_details (company_id, site_name, company_adress, contact_name, company_email, company_phone_number) VALUES ("${company_id}", "${site_name}", "${company_adress}", "${contact_name}", "${company_email}", "${company_phone_number}")`;
     conn.query(sql, function (err, result) {
       if (err) throw err;
       console.log(chalk.cyan.bold('company info inserted'))
@@ -530,7 +572,20 @@ app.post('/entreprises', (req,res,next) => {
       res.redirect('/entreprises')
     })
   }
+});
+// ADD COMPANY Name
+app.post('/add-compay', (req,res,next)=>{
+  let company_name, sql;
+  company_name = req.body.company_name;
+  sql = `INSERT INTO entreprises (company_name) VALUES ("${company_name}")`;
+  conn.query(sql, function(err, result){
+    if(err) throw err;
+    req.flash('success', 'New company added successfully!')
+  })
+  res.redirect('/')
 })
+// END ADD COMPANY NAME
+
 app.get('/delete/:id', (req,res,next) => {
   const id= req.params.id;
   const sql = 'DELETE FROM companies WHERE id = ?';

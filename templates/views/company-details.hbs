@@ -20,6 +20,7 @@
 <body class="body">
   {{>header}}
   <section class="container-fluid">
+    <!--
     <p>Les professeurs qui travaillent à
       {{#each result}}{{#if @first}}{{#each this}}{{#if @first}}
         {{this.company}}
@@ -30,13 +31,35 @@
     {{/each}}
   </section>
   <section class="container-fluid">
+    <div class="container">
+      <div id="carousel1">
+          {{#each companyCalendar}}
+          <div class="item">
+          <h3>{{@key}}</h3>
+            <div>
+                {{#each this}}
+                <div class="days">
+                  <p>{{@key}}</p>
+                  {{#each this}}
+                  <p>{{this.time}}</p>
+                  {{/each}}
+                </div>
+                {{/each}}
+            </div>
+          </div>
+          {{/each}}
+      </div>
+    </div>
+  </section>
+  <section class="container-fluid">
+    <!--
     <div class="row">
       <div class="col-12">
-        <div id="company-calendar" class="d-flex flex-wrap">
+        <div id="company-calendar" class="d-flex">
           {{#each companyCalendar}}
-          <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="in-company-calendar d-flex flex-column justify-content-center align-items-center">
           <h3>{{@key}}</h3>
-            <div class="company-each-month d-flex flex-wrap justify-content-evenly align-items-center">
+            <div class="company-each-month d-flex flex-row flex-wrap justify-content-evenly align-items-center">
                 {{#each this}}
                 <div class="days">
                   <p>{{@key}}</p>
@@ -51,6 +74,7 @@
         </div>
       </div>
     </div>
+  -->
   </section>
   {{>footer}}
 </body>

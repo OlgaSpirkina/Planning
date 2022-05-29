@@ -34,11 +34,12 @@ window.addEventListener('load', function () {
           const iconClose = document.createElement('div');
           iconClose.setAttribute('id', 'close-update-form');
           iconClose.innerHTML = '&times;';
-          const company = createInput('company', 'Nom d\'entreprise:', inputValueArr[0]);
-          const company_adress = createInput('company_adress', 'Adress', inputValueArr[1]);
-          const contact_name = createInput('contact_name', 'Nom de responsable:', inputValueArr[2]);
-          const contact_info = createInput('contact_info', 'Email de contacts:', inputValueArr[3]);
-          const company_id = createInput('id', 'ID d\'intreprise', inputValueArr[4]);
+          const site_name = createInput('site_name', 'Nom du site:', inputValueArr[1]);
+          const company_adress = createInput('company_adress', 'Adress', inputValueArr[2]);
+          const contact_name = createInput('contact_name', 'Nom de responsable:', inputValueArr[3]);
+          const company_email = createInput('company_email', 'Email de contacts:', inputValueArr[4]);
+          const company_phone_number = createInput('company_phone_number', 'Numéro de téléphone:', inputValueArr[5]);
+          const company_id = createInput('id', 'ID d\'intreprise', inputValueArr[6]);
           const submit = document.createElement('p');
           const submitInput = document.createElement('input');
           submitInput.setAttribute('type', 'submit');
@@ -48,10 +49,11 @@ window.addEventListener('load', function () {
 
           fieldset.appendChild(legend);
           fieldset.appendChild(company_id);
-          fieldset.appendChild(company);
+          fieldset.appendChild(site_name);
           fieldset.appendChild(company_adress);
           fieldset.appendChild(contact_name);
-          fieldset.appendChild(contact_info);
+          fieldset.appendChild(company_email);
+          fieldset.appendChild(company_phone_number);
           fieldset.appendChild(submitInput);
           form.appendChild(fieldset);
           document.getElementById('update-query').appendChild(form);
