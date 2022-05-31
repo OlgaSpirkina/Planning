@@ -82,8 +82,11 @@
          <input type="date" id="date" name="date" required>
        </p>
        <p>
-         <label id="label-time" for="time">Heurs du début des cours:</label>
-         <input type="datetime-local" id="time" name="time" required>
+         <label id="label-time" for="time">Heure du début des cours:</label>
+         <select id="select-time" hidden>
+           <option selected>Choisissez l'heure du début:</option>
+         </select>
+         <input type="datetime-local" id="time" name="time" hidden>
        </p>
        <p>
          <label for="yoga">Cours: Yoga</label>
@@ -140,7 +143,41 @@
       }
     }
   })
-  console.log(arrForCompanyAndSites)
+  // Time from 8AM to 8PM
+  function createTimeDropdown() {
+    var hours, minutes;
+    for(var i = 480; i <= 1200; i += 15){
+      hours = Math.floor(i / 60);
+      minutes = i % 60;
+      if (minutes < 10){
+          minutes = '0' + minutes; // adding leading zero
+      }
+      const option = document.createElement('option');
+      option.setAttribute('value', i);
+      const optionText = document.createTextNode(hours + ':' + minutes);
+      option.appendChild(optionText);
+      document.getElementById('select-time').appendChild(option);
+    }
+  }
+  // END create time createTimeDropdown//
+  // Display time dropdown when the date is selectedIndex
+  document.getElementById('date').addEventListener('click', function(){
+    document.getElementById('select-time').removeAttribute('hidden');
+    createTimeDropdown();
+  })
+  // END time dropdown
+  document.getElementById('select-time').addEventListener('click', function(){
+    let timeH = Math.floor(this.value / 60);
+    let timeM = this.value % 60;
+    if(timeM < 10 ){
+      timeM = '0' + timeM;
+    }
+    if(timeH < 10){
+      timeH = '0' + timeH;
+    }
+    document.getElementById('time').value = document.getElementById('date').value + " " + timeH + ':' + timeM + ':00';
+    console.log(document.getElementById('time').value)
+  })
   </script>
 </body>
 </html>
